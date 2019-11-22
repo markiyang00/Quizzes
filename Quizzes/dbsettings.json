@@ -1,0 +1,6 @@
+{
+	"ConnectionStrings": {
+		"DefaultConnection":
+			"Server=(localdb)\\MSSQLLocalDB;Database=Quizzes;Trusted_Connection=True;MultipleActiveResultSets=true"
+	}
+}

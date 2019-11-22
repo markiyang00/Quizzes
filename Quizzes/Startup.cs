@@ -6,43 +6,48 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Quizzes.Data;
 
 namespace Quizzes
 {
 	public class Startup
 	{
-		public Startup(IConfiguration configuration)
+		private IConfigurationRoot confSting;
+		public Startup(IHostingEnvironment hostEnv)
 		{
-			Configuration = configuration;
+			confSting = new ConfigurationBuilder().SetBasePath(hostEnv.ContentRootPath).AddJsonFile("dbsettings.json").Build();
 		}
-
-		public IConfiguration Configuration { get; }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+			services.AddDbContext<AppDBContext>(options =>
+				options.UseSqlServer(confSting.GetConnectionString("DefaultConnection")));
+		
+
+			services.AddMvc();
+			services.AddMemoryCache();
+			services.AddSession();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
-			if (env.IsDevelopment())
+			app.UseDeveloperExceptionPage();
+			app.UseStatusCodePages();
+			app.UseStaticFiles();
+			app.UseSession();
+			app.UseMvc(routes =>
 			{
-				app.UseDeveloperExceptionPage();
-			}
-			else
-			{
-				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-				app.UseHsts();
-			}
-
-			app.UseHttpsRedirection();
-			app.UseMvc();
+				routes.MapRoute("default", "{controller=User}/{action=Exit}");
+				routes.MapRoute("categoryFilter", "{controller=Tests}/{action=List}");
+			});
 		}
 	}
 }
