@@ -1,4 +1,4 @@
-﻿namespace Quizzes.ViewModals
+﻿namespace Quizzes.ViewModels
 {
 	public class AdminViewModel
 	{

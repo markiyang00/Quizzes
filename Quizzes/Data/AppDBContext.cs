@@ -13,7 +13,7 @@ namespace Quizzes.Data
 		public DbSet<Admin> Admins{get;set;}
 		public DbSet<Test> Tests {get;set;}
 		public DbSet<Question> Questions {get;set;}
-		public DbSet<Answer> Replies {get;set;}
+		public DbSet<Answer> Answers {get;set;}
 		public DbSet<UrlTest> UrlTests {get;set;}
 		public DbSet<Result> Results {get;set;}
 	}

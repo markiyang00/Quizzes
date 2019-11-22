@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Quizzes.Data;
 
 namespace Quizzes.Controllers
@@ -13,6 +15,14 @@ namespace Quizzes.Controllers
 			this.context = context;
 		}
 
+		public IActionResult DelTest(int id)
+		{
+			var elem = context.Tests.AsNoTracking().First(p => p.Id == id);
+			elem.IsDel = true;
+			context.Update(elem);
+			context.SaveChanges();
+			return RedirectToAction("Admin","Admin",elem);
+		}
 
 
 	}

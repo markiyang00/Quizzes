@@ -45,8 +45,7 @@ namespace Quizzes
 			app.UseSession();
 			app.UseMvc(routes =>
 			{
-				routes.MapRoute("default", "{controller=User}/{action=Exit}");
-				routes.MapRoute("categoryFilter", "{controller=Tests}/{action=List}");
+				routes.MapRoute("default", "{controller=Admin}/{action=Exit}");
 			});
 		}
 	}
