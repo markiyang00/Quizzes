@@ -1,33 +1,35 @@
 ﻿@model TestPageViewModel
-	<div class="row">
+	<div>
 		<strong>@Model.Test.Name</strong><br />
 		@{
-			var i = 0;
+			var i = 1;
 			<div>
 				@{
-					if (Model.Question != null)
+					foreach (var question in Model.Questions)
 					{
-						foreach (var question in Model.Questions)
-						{
-							<div>
-								<strong>@question.Text</strong>
-								@{
-									if (Model.Answers[i] != null)
+						<div>
+							<strong>@i)@question.Text</strong>
+							@{
+								if (Model.Answers[i-1] != null)
+								{
+									var j = 1;
+									foreach (var answer in Model.Answers[i-1])
 									{
-										foreach (var answer in Model.Answers[i])
-										{
-											<div>
-												<strong>@answer.</strong>
-											</div>
-										}
+										<div>
+											<strong>@j)@answer.Text</strong>
+										</div>
+										j++;
 									}
-									<a class="btn btn-warning" asp-controller="Test" asp-action="AddAnswer" asp-route-index="@i">AddAnswer</a><br/>
 								}
-							</div>
-							i++;
-						}
+								<a class="btn btn-warning" asp-controller="Test" asp-action="AddAnswer" asp-route-id="@question.Id">AddAnswer</a>
+								<br/>
+							}
+						</div>
+						i++;
 					}
-					<a class="btn btn-warning" asp-controller="Test" asp-action="AddQuestions">AddQuestion</a><br/>
+
+					<a class="btn btn-warning" asp-controller="Test" asp-action="AddQuestions" asp-route-testId="@Model.Test.Id">AddQuestion</a>
+					<br/>
 				}
 			</div>
 		}

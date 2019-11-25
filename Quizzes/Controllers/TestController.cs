@@ -12,12 +12,10 @@ namespace Quizzes.Controllers
 	{
 		
 		private readonly AppDBContext context;
-		private TestPageViewModel testPage;
 
 		public TestController(AppDBContext context)
 		{
 			this.context = context;
-			testPage=new TestPageViewModel();
 		}
 
 		public IActionResult AddTest()
@@ -32,8 +30,7 @@ namespace Quizzes.Controllers
 			{
 				context.Tests.Add(test);
 				context.SaveChanges();
-				var testBase = context.Tests.AsNoTracking().First(a => a.Name == test.Name);
-				testPage=new TestPageViewModel(){Test = testBase};
+				var testBase = context.Tests.AsNoTracking().First(a => a.Name == test.Name&!a.IsDel);
 				return RedirectToAction("TestPage",testBase);
 			}
 			return View(test);
@@ -41,13 +38,25 @@ namespace Quizzes.Controllers
 
 		public IActionResult TestPage(Test test)
 		{
-			testPage.Test = test;
+			var testPage = new TestPageViewModel() { Test = test };
+			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id & !a.IsDel).ToList();
+			var i = 0;
+			var answers= new List<Answer>[questions.Count()];
+			foreach (var question in questions)
+			{
+				answers[i] = context.Answers.AsNoTracking().Where(a => a.QuestionId == question.Id).ToList();
+				i++;
+			}
+
+			testPage.Answers = answers;
+			testPage.Questions = questions;
 			return View(testPage);
 		}
 
-		public IActionResult AddQuestions()
+		public IActionResult AddQuestions(int testId)
 		{
-			return View();
+			var question=new Question(){TestId = testId};
+			return View(question);
 		}
 
 		[HttpPost]
@@ -55,51 +64,30 @@ namespace Quizzes.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				question.TestId = testPage.Test.Id;
 				context.Questions.Add(question);
 				context.SaveChanges();
-				var questionBase = context.Questions.AsNoTracking()
-					.First(a => a.Text == question.Text & a.TestId == question.TestId &
-					            a.TrueAnswer == question.TrueAnswer);
-				if (testPage.Questions!=null)
-				{
-					testPage.Questions.Add(questionBase);
-				}
-				else
-				{
-					testPage.Questions = new List<Question> {questionBase};
-				}
-
-				return RedirectToAction("TestPage", testPage.Test);
+				var testBase = context.Tests.AsNoTracking().First(a => a.Id==question.TestId & !a.IsDel);
+				return RedirectToAction("TestPage", testBase);
 			}
 			return View(question);
 		}
 
-		public IActionResult AddAnswer(int index)
+		public IActionResult AddAnswer(int id)
 		{
-			var obj=new AnswerViewModel(){Index = index};
-			return View(obj);
+			var answer = new Answer() {QuestionId = id};
+			return View(answer);
 		}
 
 		[HttpPost]
-		public IActionResult AddAnswer(AnswerViewModel answer)
+		public IActionResult AddAnswer(Answer answer)
 		{
 			if (ModelState.IsValid)
 			{
-				context.Answers.Add(answer.Answer);
+				context.Answers.Add(answer);
 				context.SaveChanges();
-				var answerBase = context.Answers.AsNoTracking()
-					.First(a => a.Text == answer.Answer.Text);
-				if (testPage.Answers[answer.Index] != null)
-				{
-					testPage.Answers[answer.Index].Add(answerBase);
-				}
-				else
-				{
-					testPage.Answers[answer.Index] = new List<Answer> {answerBase};
-				}
-				
-				return RedirectToAction("TestPage", testPage.Test);
+				var question = context.Questions.First(a => a.Id == answer.QuestionId & !a.IsDel);
+				var testBase = context.Tests.AsNoTracking().First(a => a.Id == question.TestId & !a.IsDel);
+				return RedirectToAction("TestPage", testBase);
 			}
 			return View(answer);
 		}

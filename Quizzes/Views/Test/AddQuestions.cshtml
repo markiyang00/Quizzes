@@ -4,6 +4,12 @@
 		<form asp-action="AddQuestions" enctype="multipart/form-data" method="post" class="form-horizontal">
 			<br />
 			<br />
+			<div type="hidden" class="form-group">
+				<div type="hidden" class="col-md-5">
+					<input type="hidden" asp-for="TestId" class="from-control" />
+					<span type="hidden" asp-validation-for="TestId" class="text-danger"></span>
+				</div>
+			</div>
 			<div class="form-group">
 				<label asp-for="Text"></label>
 				<input asp-for="Text" class="from-control" />
