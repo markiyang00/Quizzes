@@ -40,11 +40,11 @@ namespace Quizzes.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("IsDel");
-
                     b.Property<int>("QuestionId");
 
                     b.Property<bool>("Selected");
+
+                    b.Property<string>("Text");
 
                     b.HasKey("Id");
 
@@ -64,6 +64,8 @@ namespace Quizzes.Migrations
                     b.Property<int>("TestId");
 
                     b.Property<string>("Text");
+
+                    b.Property<string>("TrueAnswer");
 
                     b.HasKey("Id");
 

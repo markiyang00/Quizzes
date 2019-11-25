@@ -1,0 +1,19 @@
+﻿@model Question
+	<div class="row">
+		<h3>Add Question</h3>
+		<form asp-action="AddQuestions" enctype="multipart/form-data" method="post" class="form-horizontal">
+			<br />
+			<br />
+			<div class="form-group">
+				<label asp-for="Text"></label>
+				<input asp-for="Text" class="from-control" />
+				<span asp-validation-for="Text" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="TrueAnswer"></label>
+				<input asp-for="TrueAnswer" class="from-control" />
+				<span asp-validation-for="TrueAnswer" class="text-danger"></span>
+			</div>
+			<input class="btn btn-success" type="submit" value="AddQuestion" />
+		</form>
+	</div>

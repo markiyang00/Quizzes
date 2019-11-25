@@ -20,9 +20,6 @@ namespace Quizzes.Controllers
 
 		public ViewResult Exit()
 		{
-			var userBase = new Admin() { Name = "mark", Password = "007" };
-			context.Admins.Add(userBase);
-			context.SaveChanges();
 			return View();
 		}
 

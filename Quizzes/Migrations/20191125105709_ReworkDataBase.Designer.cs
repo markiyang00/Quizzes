@@ -10,8 +10,8 @@ using Quizzes.Data;
 namespace Quizzes.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20191122160153_NewBaseData")]
-    partial class NewBaseData
+    [Migration("20191125105709_ReworkDataBase")]
+    partial class ReworkDataBase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,11 +42,11 @@ namespace Quizzes.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("IsDel");
-
                     b.Property<int>("QuestionId");
 
                     b.Property<bool>("Selected");
+
+                    b.Property<string>("Text");
 
                     b.HasKey("Id");
 
@@ -66,6 +66,8 @@ namespace Quizzes.Migrations
                     b.Property<int>("TestId");
 
                     b.Property<string>("Text");
+
+                    b.Property<string>("TrueAnswer");
 
                     b.HasKey("Id");
 
@@ -114,6 +116,8 @@ namespace Quizzes.Migrations
                 {
                     b.Property<string>("Url")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("NumberOfRuns");
 
                     b.Property<int>("TestId");
 
