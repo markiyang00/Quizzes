@@ -45,6 +45,29 @@ namespace Quizzes.Controllers
 			return View(obg);
 		}
 
+		public IActionResult AddUrlTest(int id)
+		{
+			var urlTest = new UrlTest() { TestId = id };
+			return View(urlTest);
+		}
 
+		[HttpPost]
+		public IActionResult AddUrlTest(UrlTest urlTest)
+		{
+			if (ModelState.IsValid)
+			{
+				context.UrlTests.Add(urlTest);
+				context.SaveChanges();
+				return RedirectToAction("Admin");
+			}
+			return View(urlTest);
+		}
+
+		public IActionResult AllUrlTest(int id)
+		{
+			var urlTests = context.UrlTests.Where(a => a.TestId == id);
+			var obj=new AllUrlViewModel();
+			return View(urlTests);
+		}
 	}
 }

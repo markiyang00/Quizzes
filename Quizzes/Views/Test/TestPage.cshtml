@@ -30,11 +30,12 @@
 						i++;
 					}
 
-					<a class="btn btn-warning" asp-controller="Test" asp-action="AddQuestions" asp-route-testId="@Model.Test.Id">AddQuestion</a>
+					<a class="btn btn-warning" asp-controller="Test" asp-action="AddQuestions" asp-route-testId="@Model.Test.Id">Add Question</a>
 					<br />
 				}
 			</div>
 		}
 		<a class="btn btn-warning" asp-controller="Test" asp-action="AddTest">Add new Test</a>
+		<a class="btn btn-warning" asp-controller="Admin" asp-action="Admin">Admin</a>
 		<a class="btn btn-warning" asp-controller="Admin" asp-action="Exit">Exit</a>
 	</div>
