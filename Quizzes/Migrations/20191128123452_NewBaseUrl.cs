@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Quizzes.Migrations
 {
-    public partial class ReworkDataBase : Migration
+    public partial class NewBaseUrl : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -64,6 +64,7 @@ namespace Quizzes.Migrations
                 columns: table => new
                 {
                     Url = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
                     Time = table.Column<DateTime>(nullable: false),
                     NumberOfRuns = table.Column<int>(nullable: true),
                     TestId = table.Column<int>(nullable: false)

@@ -1,0 +1,19 @@
+﻿@model AllUrlViewModel
+<div>
+	<a class="btn btn-warning" asp-controller="Admin" asp-action="Admin">Admin</a>
+	<table border="1">
+		@{
+			var i = 1;
+			foreach (var url in Model.UrlTests)
+			{
+				<tr>
+					<td>@i)@url.Url</td>
+					<td>NumberOfRuns-@url.NumberOfRuns</td>
+					<td>Time-@url.Time</td>
+					<td>Name-@url.Name</td>
+				</tr>
+				i++;
+			}
+		}
+	</table>
+</div>

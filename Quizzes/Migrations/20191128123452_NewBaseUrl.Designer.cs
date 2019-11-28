@@ -10,8 +10,8 @@ using Quizzes.Data;
 namespace Quizzes.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20191125105709_ReworkDataBase")]
-    partial class ReworkDataBase
+    [Migration("20191128123452_NewBaseUrl")]
+    partial class NewBaseUrl
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -116,6 +116,8 @@ namespace Quizzes.Migrations
                 {
                     b.Property<string>("Url")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
 
                     b.Property<int?>("NumberOfRuns");
 

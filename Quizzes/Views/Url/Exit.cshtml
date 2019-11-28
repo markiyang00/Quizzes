@@ -1,0 +1,23 @@
+﻿@model UrlViewModel
+<h2>Exit</h2><br />
+<div class="row">
+	<form asp-action="Exit" enctype="multipart/form-data" method="post" class="form-horizontal">
+		@{
+			if (Model != null)
+			{
+				if (!string.IsNullOrEmpty(Model.Mes))
+				{
+					<strong>@Model.Mes</strong>
+				}
+			}
+		}
+		<br />
+		<br />
+		<div class="form-group">
+			<label asp-for="Url"></label>
+			<input asp-for="Url" class="from-control" />
+			<span asp-validation-for="Url" class="text-danger"></span>
+		</div>
+		<input class="btn btn-success" type="submit" value="Sign in" />
+	</form>
+</div>

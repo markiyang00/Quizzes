@@ -65,9 +65,9 @@ namespace Quizzes.Controllers
 
 		public IActionResult AllUrlTest(int id)
 		{
-			var urlTests = context.UrlTests.Where(a => a.TestId == id);
-			var obj=new AllUrlViewModel();
-			return View(urlTests);
+			var urlTests = context.UrlTests.Where(a => a.TestId == id).ToList();
+			var obj=new AllUrlViewModel(){UrlTests = urlTests};
+			return View(obj);
 		}
 	}
 }

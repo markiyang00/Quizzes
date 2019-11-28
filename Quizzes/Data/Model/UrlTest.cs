@@ -8,6 +8,7 @@ namespace Quizzes.Data.Model
 	{
 		[Key]
 		public string Url { get; set; }
+		public string Name { get; set; }
 
 		public DateTime Time { get; set; }
 		public int? NumberOfRuns {get; set; }

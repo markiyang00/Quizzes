@@ -1,0 +1,37 @@
+﻿@model TestPageViewModel
+<div>
+	<strong>@Model.Test.Name</strong><br />
+	@{
+		var i = 1;
+		<div>
+			@{
+				foreach (var question in Model.Questions)
+				{
+					<div>
+						<strong>@i)@question.Text</strong>
+						@{
+							if (Model.Answers[i - 1] != null)
+							{
+								var j = 1;
+								foreach (var answer in Model.Answers[i - 1])
+								{
+									<div>
+										<strong>@j)@answer.Text</strong>
+									</div>
+									j++;
+								}
+							}
+							
+							<br />
+						}
+					</div>
+					
+					i++;
+				}
+
+				<br />
+			}
+		</div>
+	}
+	
+</div>

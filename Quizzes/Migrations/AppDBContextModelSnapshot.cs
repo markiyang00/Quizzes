@@ -115,6 +115,8 @@ namespace Quizzes.Migrations
                     b.Property<string>("Url")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Name");
+
                     b.Property<int?>("NumberOfRuns");
 
                     b.Property<int>("TestId");
