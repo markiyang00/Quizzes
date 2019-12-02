@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Quizzes.Data;
@@ -16,6 +17,12 @@ namespace Quizzes.Controllers
 		public UrlController(AppDBContext context)
 		{
 			this.context = context;
+		}
+
+		public IActionResult Check(string url)
+		{
+			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == url);
+			return RedirectToAction("CheckTest", urlTest);
 		}
 
 		public ViewResult Exit()
@@ -103,11 +110,35 @@ namespace Quizzes.Controllers
 		}
 		public IActionResult CheckTest(UrlTest urlTest)
 		{
-			var results2 = context.Results.AsNoTracking().Where(a => a.UrlTestUrl == urlTest.Url).ToList();
+			var point = 0;
+			var results = context.Results.AsNoTracking().Where(a => a.UrlTestUrl == urlTest.Url).ToList();
 			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
-			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id & !a.IsDel).ToList();
+			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id & !a.IsDel).OrderBy(a=>a.Id).ToList();
 			var answers=new List<Answer>();
-			return View();
+			foreach (var result in results)
+			{
+				answers.Add(context.Answers.AsNoTracking().First(a=>a.Id==result.AnswerId));
+			}
+
+			foreach (var question in questions)
+			{
+				var answerQuestion = answers.Where(a => a.QuestionId == question.Id).ToList();
+				var answerValueBild = new StringBuilder(100);
+				foreach (var answer in answerQuestion)
+				{
+					answerValueBild.Append(answer.Text);
+					answerValueBild.Append(";");
+				}
+
+				var answerValue = answerValueBild.ToString();
+
+				if (question.TrueAnswer.Equals(answerValue))
+					point++;
+
+			}
+
+			var urlResult=new UrlResultViewModel(){Point = point,UrlTest = urlTest,MaxPoint = questions.Count};
+			return View(urlResult);
 		}
 
 	}
