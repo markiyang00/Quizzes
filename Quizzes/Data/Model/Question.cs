@@ -6,7 +6,6 @@ namespace Quizzes.Data.Model
 	{
 		public int Id { get; set; }
 		public string Text { get; set; }
-		public string TrueAnswer { get; set; }
 		public bool IsDel { get; set; }
 		public int TestId { get; set; }
 		public List<Answer> Replies { get; set; }

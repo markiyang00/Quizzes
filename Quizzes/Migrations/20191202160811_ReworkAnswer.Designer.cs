@@ -10,8 +10,8 @@ using Quizzes.Data;
 namespace Quizzes.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20191201235631_RevorkResult")]
-    partial class RevorkResult
+    [Migration("20191202160811_ReworkAnswer")]
+    partial class ReworkAnswer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,6 +48,8 @@ namespace Quizzes.Migrations
 
                     b.Property<string>("Text");
 
+                    b.Property<bool>("True");
+
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
@@ -66,8 +68,6 @@ namespace Quizzes.Migrations
                     b.Property<int>("TestId");
 
                     b.Property<string>("Text");
-
-                    b.Property<string>("TrueAnswer");
 
                     b.HasKey("Id");
 
@@ -118,6 +118,8 @@ namespace Quizzes.Migrations
                     b.Property<string>("Name");
 
                     b.Property<int?>("NumberOfRuns");
+
+                    b.Property<int>("Point");
 
                     b.Property<int>("TestId");
 

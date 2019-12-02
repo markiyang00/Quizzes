@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Quizzes.Data;
@@ -56,6 +57,10 @@ namespace Quizzes.Controllers
 		{
 			if (ModelState.IsValid)
 			{
+				if (string.IsNullOrEmpty(urlTest.Url))
+				{
+					urlTest.Url = Guid.NewGuid().ToString();
+				}
 				context.UrlTests.Add(urlTest);
 				context.SaveChanges();
 				return RedirectToAction("Admin");

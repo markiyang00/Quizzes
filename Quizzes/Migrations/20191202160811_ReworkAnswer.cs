@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Quizzes.Migrations
 {
-    public partial class RevorkResult : Migration
+    public partial class ReworkAnswer : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,7 +44,6 @@ namespace Quizzes.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Text = table.Column<string>(nullable: true),
-                    TrueAnswer = table.Column<string>(nullable: true),
                     IsDel = table.Column<bool>(nullable: false),
                     TestId = table.Column<int>(nullable: false)
                 },
@@ -67,6 +66,7 @@ namespace Quizzes.Migrations
                     Name = table.Column<string>(nullable: true),
                     Time = table.Column<DateTime>(nullable: false),
                     NumberOfRuns = table.Column<int>(nullable: true),
+                    Point = table.Column<int>(nullable: false),
                     TestId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -88,6 +88,7 @@ namespace Quizzes.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Text = table.Column<string>(nullable: true),
                     Selected = table.Column<bool>(nullable: false),
+                    True = table.Column<bool>(nullable: false),
                     QuestionId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

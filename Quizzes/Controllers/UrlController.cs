@@ -36,6 +36,19 @@ namespace Quizzes.Controllers
 			var urlTest = context.UrlTests.FirstOrDefault(a => a.Url == urlModel.Url);
 			if (urlTest != null)
 			{
+				if (urlTest.NumberOfRuns!=null)
+					if (urlTest.NumberOfRuns == 0)
+					{
+						urlModel.Mes = "NumberOfRuns = 0";
+						return View(urlModel);
+					}
+					else
+					{
+						urlTest.NumberOfRuns--;
+						context.Update(urlTest);
+						context.SaveChanges();
+					}
+
 				return RedirectToAction("TestUser", urlTest);
 			}
 
@@ -123,21 +136,24 @@ namespace Quizzes.Controllers
 			foreach (var question in questions)
 			{
 				var answerQuestion = answers.Where(a => a.QuestionId == question.Id).ToList();
-				var answerValueBild = new StringBuilder(100);
+				var trueAnswer = true;
 				foreach (var answer in answerQuestion)
 				{
-					answerValueBild.Append(answer.Text);
-					answerValueBild.Append(";");
+					if (!answer.True)
+						trueAnswer = false;
 				}
 
-				var answerValue = answerValueBild.ToString();
-
-				if (question.TrueAnswer.Equals(answerValue))
+				if (trueAnswer)
+				{
 					point++;
-
+				}
 			}
 
-			var urlResult=new UrlResultViewModel(){Point = point,UrlTest = urlTest,MaxPoint = questions.Count};
+
+			urlTest.Point = point;
+			context.Update(urlTest);
+			context.SaveChanges();
+			var urlResult=new UrlResultViewModel(){UrlTest = urlTest,MaxPoint = questions.Count};
 			return View(urlResult);
 		}
 
