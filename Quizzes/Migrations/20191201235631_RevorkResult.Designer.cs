@@ -10,8 +10,8 @@ using Quizzes.Data;
 namespace Quizzes.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20191128123452_NewBaseUrl")]
-    partial class NewBaseUrl
+    [Migration("20191201235631_RevorkResult")]
+    partial class RevorkResult
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -83,8 +83,6 @@ namespace Quizzes.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AnswerId");
-
-                    b.Property<int>("UrlTestId");
 
                     b.Property<string>("UrlTestUrl");
 

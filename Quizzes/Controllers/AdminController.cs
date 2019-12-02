@@ -20,7 +20,7 @@ namespace Quizzes.Controllers
 
 		public ViewResult Exit()
 		{
-			//var admin=new Admin(){Name = "mark",Password = "007"};
+			//var admin = new Admin() { Name = "mark", Password = "007" };
 			//context.Admins.Add(admin);
 			//context.SaveChanges();
 			return View();

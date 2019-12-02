@@ -82,8 +82,6 @@ namespace Quizzes.Migrations
 
                     b.Property<int>("AnswerId");
 
-                    b.Property<int>("UrlTestId");
-
                     b.Property<string>("UrlTestUrl");
 
                     b.HasKey("Id");

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Quizzes.Migrations
 {
-    public partial class NewBaseUrl : Migration
+    public partial class RevorkResult : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -108,7 +108,6 @@ namespace Quizzes.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AnswerId = table.Column<int>(nullable: false),
-                    UrlTestId = table.Column<int>(nullable: false),
                     UrlTestUrl = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
