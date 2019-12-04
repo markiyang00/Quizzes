@@ -10,8 +10,8 @@ using Quizzes.Data;
 namespace Quizzes.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20191202160811_ReworkAnswer")]
-    partial class ReworkAnswer
+    [Migration("20191204123718_AddUrlTestAttend")]
+    partial class AddUrlTestAttend
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -84,9 +84,13 @@ namespace Quizzes.Migrations
 
                     b.Property<int>("AnswerId");
 
+                    b.Property<int>("UrlTestAttendId");
+
                     b.Property<string>("UrlTestUrl");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UrlTestAttendId");
 
                     b.HasIndex("UrlTestUrl");
 
@@ -119,8 +123,6 @@ namespace Quizzes.Migrations
 
                     b.Property<int?>("NumberOfRuns");
 
-                    b.Property<int>("Point");
-
                     b.Property<int>("TestId");
 
                     b.Property<DateTime>("Time");
@@ -130,6 +132,27 @@ namespace Quizzes.Migrations
                     b.HasIndex("TestId");
 
                     b.ToTable("UrlTests");
+                });
+
+            modelBuilder.Entity("Quizzes.Data.Model.UrlTestAttend", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("NumberOfRun");
+
+                    b.Property<int>("Point");
+
+                    b.Property<DateTime>("TimeTest");
+
+                    b.Property<string>("UrlTestUrl");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UrlTestUrl");
+
+                    b.ToTable("UrlTestAttends");
                 });
 
             modelBuilder.Entity("Quizzes.Data.Model.Answer", b =>
@@ -150,8 +173,13 @@ namespace Quizzes.Migrations
 
             modelBuilder.Entity("Quizzes.Data.Model.Result", b =>
                 {
-                    b.HasOne("Quizzes.Data.Model.UrlTest", "UrlTest")
+                    b.HasOne("Quizzes.Data.Model.UrlTestAttend")
                         .WithMany("Results")
+                        .HasForeignKey("UrlTestAttendId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Quizzes.Data.Model.UrlTest", "UrlTest")
+                        .WithMany()
                         .HasForeignKey("UrlTestUrl");
                 });
 
@@ -161,6 +189,13 @@ namespace Quizzes.Migrations
                         .WithMany("UrlTests")
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Quizzes.Data.Model.UrlTestAttend", b =>
+                {
+                    b.HasOne("Quizzes.Data.Model.UrlTest", "UrlTest")
+                        .WithMany("UrlTestAttends")
+                        .HasForeignKey("UrlTestUrl");
                 });
 #pragma warning restore 612, 618
         }

@@ -46,6 +46,7 @@ namespace Quizzes
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute("default", "{controller=Admin}/{action=Exit}");
+				routes.MapRoute("userExit", "{controller=Url}/{action=Exit}/{url?}");
 			});
 		}
 	}

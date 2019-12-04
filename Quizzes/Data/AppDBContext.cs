@@ -15,6 +15,7 @@ namespace Quizzes.Data
 		public DbSet<Question> Questions {get;set;}
 		public DbSet<Answer> Answers {get;set;}
 		public DbSet<UrlTest> UrlTests {get;set;}
+		public DbSet<UrlTestAttend> UrlTestAttends {get;set;}
 		public DbSet<Result> Results {get;set;}
 	}
 }

@@ -1,0 +1,19 @@
+﻿@model UrlAttendsViewModel
+<div>
+	<a class="btn btn-warning" asp-controller="Admin" asp-action="Admin">Admin</a>
+	<h1>@Model.Name</h1>
+	<table border="1">
+		@{
+			var i = 1;
+			foreach (var urlAttend in Model.UrlTestAttends)
+			{
+				<tr>
+					<td>@i)NumberOfRuns-@urlAttend.NumberOfRun</td>
+					<td>@urlAttend.Point/@Model.MaxPoint</td>
+					<td>Time-@urlAttend.TimeTest</td>
+				</tr>
+				i++;
+			}
+		}
+	</table>
+</div>

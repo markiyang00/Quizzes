@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Quizzes.Migrations
 {
-    public partial class ReworkAnswer : Migration
+    public partial class AddUrlTestAttend : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -66,7 +66,6 @@ namespace Quizzes.Migrations
                     Name = table.Column<string>(nullable: true),
                     Time = table.Column<DateTime>(nullable: false),
                     NumberOfRuns = table.Column<int>(nullable: true),
-                    Point = table.Column<int>(nullable: false),
                     TestId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -103,17 +102,46 @@ namespace Quizzes.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UrlTestAttends",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    NumberOfRun = table.Column<int>(nullable: false),
+                    Point = table.Column<int>(nullable: false),
+                    TimeTest = table.Column<DateTime>(nullable: false),
+                    UrlTestUrl = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UrlTestAttends", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UrlTestAttends_UrlTests_UrlTestUrl",
+                        column: x => x.UrlTestUrl,
+                        principalTable: "UrlTests",
+                        principalColumn: "Url",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Results",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AnswerId = table.Column<int>(nullable: false),
+                    UrlTestAttendId = table.Column<int>(nullable: false),
                     UrlTestUrl = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Results", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Results_UrlTestAttends_UrlTestAttendId",
+                        column: x => x.UrlTestAttendId,
+                        principalTable: "UrlTestAttends",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Results_UrlTests_UrlTestUrl",
                         column: x => x.UrlTestUrl,
@@ -133,8 +161,18 @@ namespace Quizzes.Migrations
                 column: "TestId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Results_UrlTestAttendId",
+                table: "Results",
+                column: "UrlTestAttendId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Results_UrlTestUrl",
                 table: "Results",
+                column: "UrlTestUrl");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UrlTestAttends_UrlTestUrl",
+                table: "UrlTestAttends",
                 column: "UrlTestUrl");
 
             migrationBuilder.CreateIndex(
@@ -156,6 +194,9 @@ namespace Quizzes.Migrations
 
             migrationBuilder.DropTable(
                 name: "Questions");
+
+            migrationBuilder.DropTable(
+                name: "UrlTestAttends");
 
             migrationBuilder.DropTable(
                 name: "UrlTests");
