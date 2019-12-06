@@ -10,7 +10,7 @@ using Quizzes.ViewModels;
 
 namespace Quizzes.Controllers
 {
-	public class UrlController:Controller
+	public class UrlController : Controller
 	{
 		private readonly AppDBContext context;
 
@@ -24,8 +24,10 @@ namespace Quizzes.Controllers
 			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == url);
 			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
 			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id & !a.IsDel);
-			var urlTestAttends = context.UrlTestAttends.AsNoTracking().Where(a => a.UrlTestUrl == url).OrderBy(a=>a.NumberOfRun).ToList();
-			var obj=new UrlAttendsViewModel(){Name = urlTest.Name,MaxPoint = questions.Count(),UrlTestAttends = urlTestAttends};
+			var urlTestAttends = context.UrlTestAttends.AsNoTracking().Where(a => a.UrlTestUrl == url)
+				.OrderBy(a => a.NumberOfRun).ToList();
+			var obj = new UrlAttendsViewModel()
+				{Name = urlTest.Name, MaxPoint = questions.Count(), UrlTestAttends = urlTestAttends};
 			return View(obj);
 		}
 
@@ -38,20 +40,27 @@ namespace Quizzes.Controllers
 				var urlTest = context.UrlTests.FirstOrDefault(a => a.Url == url);
 				if (urlTest != null)
 				{
-					if (urlTest.NumberOfRuns != null)
-						if (urlTest.NumberOfRuns == 0)
-						{
-							var urlModel = new UrlViewModel {Mes = "NumberOfRuns = 0",Url = url};
-							return View(urlModel);
-						}
-						else
-						{
-							urlTest.NumberOfRuns--;
-							context.Update(urlTest);
-							context.SaveChanges();
-						}
+					var data = DateTime.Now;
+					if (DateTime.Compare(data, urlTest.Time) == -1)
+					{
+						if (urlTest.NumberOfRuns != null)
+							if (urlTest.NumberOfRuns == 0)
+							{
+								var urlModel = new UrlViewModel {Mes = "NumberOfRuns = 0", Url = url};
+								return View(urlModel);
+							}
+							else
+							{
+								urlTest.NumberOfRuns--;
+								context.Update(urlTest);
+								context.SaveChanges();
+							}
 
-					return RedirectToAction("TestUser", urlTest);
+						return RedirectToAction("TestUser", urlTest);
+					}
+
+					var urlModel1 = new UrlViewModel {Mes = "Time is overdue ", Url = url};
+					return View(urlModel1);
 				}
 			}
 
@@ -64,20 +73,27 @@ namespace Quizzes.Controllers
 			var urlTest = context.UrlTests.FirstOrDefault(a => a.Url == urlModel.Url);
 			if (urlTest != null)
 			{
-				if (urlTest.NumberOfRuns!=null)
-					if (urlTest.NumberOfRuns == 0)
-					{
-						urlModel.Mes = "NumberOfRuns = 0";
-						return View(urlModel);
-					}
-					else
-					{
-						urlTest.NumberOfRuns--;
-						context.Update(urlTest);
-						context.SaveChanges();
-					}
+				var data = DateTime.Now;
+				if (DateTime.Compare(data,urlModel.Time)==-1)
+				{
+					if (urlTest.NumberOfRuns != null)
+						if (urlTest.NumberOfRuns == 0)
+						{
+							urlModel.Mes = "NumberOfRuns = 0";
+							return View(urlModel);
+						}
+						else
+						{
+							urlTest.NumberOfRuns--;
+							context.Update(urlTest);
+							context.SaveChanges();
+						}
 
-				return RedirectToAction("TestUser", urlTest);
+					return RedirectToAction("TestUser", urlTest);
+				}
+
+				urlModel.Mes = "Time is overdue ";
+				return View(urlModel);
 			}
 
 			urlModel.Mes = "Url not Equals";
@@ -137,12 +153,14 @@ namespace Quizzes.Controllers
 							context.Results.Add(result);
 						}
 					}
+
 					i++;
 				}
 
 				context.SaveChanges();
 				return RedirectToAction("CheckTest", urlAttend);
 			}
+
 			var answers = new List<Answer>[questions.Count()];
 			foreach (var question in questions)
 			{
@@ -153,6 +171,7 @@ namespace Quizzes.Controllers
 					answer.Selected = userTest.Answers[i][j].Selected;
 					j++;
 				}
+
 				i++;
 			}
 
@@ -162,18 +181,20 @@ namespace Quizzes.Controllers
 			testPage.Questions = questions;
 			return View(testPage);
 		}
+
 		public IActionResult CheckTest(UrlTestAttend urlTestAttend)
 		{
 			var point = 0;
 			var results = context.Results.AsNoTracking().Where(a => a.UrlTestAttendId == urlTestAttend.Id).ToList();
 			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == urlTestAttend.UrlTestUrl);
 			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
-			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id & !a.IsDel).OrderBy(a=>a.Id).ToList();
-			var answers=new List<Answer>();
-			
+			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id & !a.IsDel)
+				.OrderBy(a => a.Id).ToList();
+			var answers = new List<Answer>();
+
 			foreach (var result in results)
 			{
-				answers.Add(context.Answers.AsNoTracking().First(a=>a.Id==result.AnswerId));
+				answers.Add(context.Answers.AsNoTracking().First(a => a.Id == result.AnswerId));
 			}
 
 			foreach (var question in questions)
@@ -186,7 +207,7 @@ namespace Quizzes.Controllers
 					if (answer.True)
 						trueAnswerCount++;
 
-				if ( trueAnswerCount== answerQuestion.Count)
+				if (trueAnswerCount == answerQuestion.Count)
 				{
 					foreach (var answer in answerQuestion)
 						if (!answer.True)
@@ -208,9 +229,12 @@ namespace Quizzes.Controllers
 			urlTestAttend.Point = point;
 			context.Update(urlTestAttend);
 			context.SaveChanges();
-			var urlResult=new UrlResultViewModel(){Name = urlTest.Name,Point = urlTestAttend.Point,MaxPoint = questions.Count,NumberOfRun = urlTestAttend.NumberOfRun};
+			var urlResult = new UrlResultViewModel()
+			{
+				Name = urlTest.Name, Point = urlTestAttend.Point, MaxPoint = questions.Count,
+				NumberOfRun = urlTestAttend.NumberOfRun
+			};
 			return View(urlResult);
 		}
-
 	}
 }

@@ -63,8 +63,13 @@ namespace Quizzes.Controllers
 				}
 				context.UrlTests.Add(urlTest);
 				context.SaveChanges();
-				return RedirectToAction("Admin");
+				return RedirectToAction("AddUrlTestUrl",urlTest);
 			}
+			return View(urlTest);
+		}
+
+		public IActionResult AddUrlTestUrl(UrlTest urlTest)
+		{
 			return View(urlTest);
 		}
 

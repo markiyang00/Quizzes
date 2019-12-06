@@ -1,52 +1,64 @@
 ﻿@model TestUserViewModel
-<div>
-	<strong>@Model.Test.Name</strong><br />
-	<strong>@Model.UrlTest.Name</strong><br />
-	<form asp-action="TestUser" enctype="multipart/form-data" method="post" class="form-horizontal">
-		<br />
-		<div type="hidden" class="form-group">
-			<div type="hidden" class="col-md-5">
-				<input type="hidden" asp-for="UrlTestAttend.Id" class="from-control" />
-				<span type="hidden" asp-validation-for="UrlTestAttend.Id" class="text-danger"></span>
+	<div>
+		<strong>@Model.Test.Name</strong><br />
+		<form asp-action="TestUser" enctype="multipart/form-data" method="post" class="form-horizontal">
+			@if (!string.IsNullOrEmpty(Model.UrlTest.Name))
+			{
+				<label asp-for="UrlTest.Name">Username</label>
+				<input asp-for="UrlTest.Name" class="from-control" disabled="disabled"/>
+				<span asp-validation-for="UrlTest.Name" class="text-danger"></span>
+			}
+			else
+			{
+				<label asp-for="UrlTest.Name">Username</label>
+				<input asp-for="UrlTest.Name" class="from-control" />
+				<span asp-validation-for="UrlTest.Name" class="text-danger"></span>
+			}
+
+			<br />
+			<div type="hidden" class="form-group">
+				<div type="hidden" class="col-md-5">
+					<input type="hidden" asp-for="UrlTestAttend.Id" class="from-control" />
+					<span type="hidden" asp-validation-for="UrlTestAttend.Id" class="text-danger"></span>
+				</div>
 			</div>
-		</div>
-		@{
-			var i = 1;
-			<div>
-				@{
-					foreach (var question in Model.Questions)
-					{
-						<div>
-							<strong>@i)@question.Text</strong>
-							@{
-								if (Model.Answers[i - 1] != null)
-								{
-									var j = 1;
-									foreach (var answer in Model.Answers[i - 1])
+			@{
+				var i = 1;
+				<div>
+					@{
+						foreach (var question in Model.Questions)
+						{
+							<div>
+								<strong>@i)@question.Text</strong>
+								@{
+									if (Model.Answers[i - 1] != null)
 									{
-										<div>
-											<div class="form-group">
-												<input type="hidden" asp-for="Answers[i - 1][j - 1].Id" class="from-control" />
-												<span type="hidden" asp-validation-for="Answers[i - 1][j - 1].Id" class="text-danger"></span>
-												<input asp-for="Answers[i - 1][j - 1].Selected" class="from-control" />@j)@answer.Text
-												<span asp-validation-for="Answers[i - 1][j - 1].Selected" class="text-danger"></span>
+										var j = 1;
+										foreach (var answer in Model.Answers[i - 1])
+										{
+											<div>
+												<div class="form-group">
+													<input type="hidden" asp-for="Answers[i - 1][j - 1].Id" class="from-control" />
+													<span type="hidden" asp-validation-for="Answers[i - 1][j - 1].Id" class="text-danger"></span>
+													<input asp-for="Answers[i - 1][j - 1].Selected" class="from-control" />@j)@answer.Text
+													<span asp-validation-for="Answers[i - 1][j - 1].Selected" class="text-danger"></span>
+												</div>
 											</div>
-										</div>
-										j++;
+											j++;
+										}
 									}
+
+									<br />
 								}
+							</div>
 
-								<br />
-							}
-						</div>
+							i++;
+						}
 
-						i++;
+						<br />
 					}
-
-					<br />
-				}
-			</div>
-		}
-		<input class="btn btn-success" type="submit" value="End Test" />
-	</form>
-</div>
+				</div>
+			}
+			<input class="btn btn-success" type="submit" value="End Test" />
+		</form>
+	</div>
