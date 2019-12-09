@@ -20,12 +20,18 @@
 			<div type="hidden" class="col-md-5">
 				<input type="hidden" asp-for="UrlTestAttend.Id" class="from-control" />
 				<span type="hidden" asp-validation-for="UrlTestAttend.Id" class="text-danger"></span>
-				<input type="hidden" asp-for="Question.Id" class="from-control" />
-				<span type="hidden" asp-validation-for="Question.Id" class="text-danger"></span>
-				<input type="hidden" asp-for="PrevQuestion.Id" class="from-control" />
-				<span type="hidden" asp-validation-for="PrevQuestion.Id" class="text-danger"></span>
-				<input type="hidden" asp-for="NextQuestion.Id" class="from-control" />
-				<span type="hidden" asp-validation-for="NextQuestion.Id" class="text-danger"></span>
+			</div>
+			<div type="hidden" class="col-md-5">
+				<input asp-for="Question.Id" class="from-control" />
+				<span  asp-validation-for="Question.Id" class="text-danger"></span>
+			</div>
+			<div type="hidden" class="col-md-5">
+				<input asp-for="PrevId" class="from-control" />
+				<span  asp-validation-for="PrevId" class="text-danger"></span>
+			</div>
+			<div type="hidden" class="col-md-5">
+				<input asp-for="NextId" class="from-control" />
+				<span asp-validation-for="NextId" class="text-danger"></span>
 			</div>
 		</div>
 		<div>
@@ -46,24 +52,23 @@
 				}
 			}
 			<br />
-			}
 		</div>
-		@if (Model.PrevQuestion == null)
+		@if (Model.PrevId == -1)
 		{
 			<input class="btn btn-success" type="submit" value="Prev Page" disabled="disabled" />
 		}
 		else
 		{
-			<input class="btn btn-success" type="submit" value="Prev Page" asp-route-id="@Model.PrevQuestion.Id" />
+			<input class="btn btn-success" type="submit" value="Prev Page" asp-route-id="@Model.PrevId" />
 		}
-		@if (Model.NextQuestion == null)
+		@if (Model.NextId == -1)
 		{
 			<input class="btn btn-success" type="submit" value="Next Page" disabled="disabled" />
 		}
 		else
 		{
-			<input class="btn btn-success" type="submit" value="Next Page" asp-route-id="@Model.NextQuestion.Id" />
+			<input class="btn btn-success" type="submit" value="Next Page" asp-route-id="@Model.NextId" />
 		}
-		<input class="btn btn-success" type="submit" value="End test" disabled="disabled" />
+		<input class="btn btn-success" type="submit" value="End test" asp-route-id="-2" />
 	</form>
 </div>

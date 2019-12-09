@@ -56,7 +56,7 @@ namespace Quizzes.Controllers
 								context.SaveChanges();
 							}
 
-						return RedirectToAction("TestUser", urlTest);
+						return RedirectToAction("QuestionPage", urlTest);
 					}
 
 					var urlModel1 = new UrlViewModel {Mes = "Time is overdue ", Url = url};
@@ -89,7 +89,7 @@ namespace Quizzes.Controllers
 							context.SaveChanges();
 						}
 
-					return RedirectToAction("TestUser", urlTest);
+					return RedirectToAction("QuestionPage", urlTest);
 				}
 
 				urlModel.Mes = "Time is overdue ";
@@ -204,15 +204,17 @@ namespace Quizzes.Controllers
 			questionPage.UrlTestAttend = urlAttendBase;
 			questionPage.Test = test;
 			questionPage.Question = questions[0];
+			questionPage.PrevId = -1;
 			if (questions[1] != null)
-			{
-				questionPage.NextQuestion = questions[1];
-			}
+				questionPage.NextId = questions[1].Id;
+			else
+				questionPage.NextId = -1;
+
 			return View(questionPage);
 		}
 
 		[HttpPost]
-		public IActionResult QuestionPage(int id ,QuestionPageViewModel userQuestionPage)
+		public IActionResult QuestionPage(int id, QuestionPageViewModel userQuestionPage)
 		{
 			var questionPage = new QuestionPageViewModel();
 			var urlAttend = context.UrlTestAttends.AsNoTracking().First(a => a.Id == userQuestionPage.UrlTestAttend.Id);
@@ -220,27 +222,41 @@ namespace Quizzes.Controllers
 			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
 			var urlAttendBase = context.UrlTestAttends.AsNoTracking().First(a =>
 				a.UrlTestUrl == urlTest.Url & a.NumberOfRun == urlAttend.NumberOfRun);
-			if (ModelState.IsValid)
+
+			var resultsBase = context.Results.AsNoTracking()
+				.Where(a => a.UrlTestAttendId == urlAttendBase.Id).ToList();
+			var answersUser = new List<Answer>();
+			foreach (var result in resultsBase)
 			{
-				var resultsBase = context.Results.AsNoTracking()
-					.Where(a => a.UrlTestAttendId == urlAttendBase.Id).ToList();
-				var answersUser = new List<Answer>();
-				foreach (var result in resultsBase)
-				{
-					var answer=context.Answers.FirstOrDefault(a => a.Id == result.AnswerId & a.QuestionId== userQuestionPage.Question.Id);
-					if (answer!=null)
-						answersUser.Add(answer);
-				}
-				foreach (var answer in userQuestionPage.Answers)
+				var answer = context.Answers.FirstOrDefault(a =>
+					a.Id == result.AnswerId & a.QuestionId == userQuestionPage.Question.Id);
+				if (answer != null)
+					answersUser.Add(answer);
+			}
+
+			foreach (var answer in userQuestionPage.Answers)
+			{
+				if (answersUser.Count == 0)
 				{
 					if (answer.Selected)
 					{
-						if (answersUser.Count == 0 | answersUser.FirstOrDefault(a => a.Id == answer.Id) != null) 
+						var result = new Result() {AnswerId = answer.Id, UrlTestAttendId = urlAttend.Id};
+						context.Results.Add(result);
+					}
+				}
+				else
+				{
+					if (answersUser.FirstOrDefault(a => a.Id == answer.Id) == null)
+					{
+						if (answer.Selected)
 						{
 							var result = new Result() {AnswerId = answer.Id, UrlTestAttendId = urlAttend.Id};
 							context.Results.Add(result);
 						}
-						else
+					}
+					else
+					{
+						if (!answer.Selected)
 						{
 							var resultBase = context.Results.AsNoTracking()
 								.First(a => a.UrlTestAttendId == urlAttendBase.Id & a.AnswerId == answer.Id);
@@ -248,32 +264,66 @@ namespace Quizzes.Controllers
 						}
 					}
 				}
-
-				questionPage.Test = test;
-				questionPage.UrlTest = urlTest;
-				questionPage.UrlTestAttend = urlAttendBase;
-				var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id).OrderBy(a => a.Id)
-					.ToList();
-				var i = 0;
-				foreach (var question in questions)
-				{
-					if (question.Id==id)
-						break;
-					i++;
-				}
-
-				if (id==userQuestionPage.NextQuestion.Id)
-				{
-					questionPage.PrevQuestion = userQuestionPage.Question;
-					questionPage.Question = context.Questions.AsNoTracking().First(a => a.Id == id);
-					questionPage.
-					
-				}
-
 			}
 
-			
-			return View(userQuestionPage);
+
+			context.SaveChanges();
+			if (id == -2)
+			{
+				return RedirectToAction("CheckTest", urlAttend);
+			}
+
+			questionPage.Test = test;
+			questionPage.UrlTest = urlTest;
+			questionPage.UrlTestAttend = urlAttendBase;
+			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id).OrderBy(a => a.Id)
+				.ToList();
+			var i = 0;
+			foreach (var question in questions)
+			{
+				if (question.Id == id)
+					break;
+				i++;
+			}
+
+			questionPage.Answers = context.Answers.AsNoTracking().Where(a => a.QuestionId == id).ToList();
+			var answersPage = new List<Answer>();
+			foreach (var result in resultsBase)
+			{
+				var answer = context.Answers.FirstOrDefault(a => a.Id == result.AnswerId & a.QuestionId == id);
+				if (answer != null)
+					answersPage.Add(answer);
+			}
+
+			if (answersPage.Count != 0)
+			{
+				foreach (var answer in answersPage)
+				{
+					questionPage.Answers.Find(a => a.Id == answer.Id).Selected = true;
+				}
+			}
+
+			questionPage.Question = questions[i];
+			if (id == userQuestionPage.NextId)
+			{
+				questionPage.PrevId = questions[i-1].Id;
+				if(questions.Count-1==i)
+					questionPage.NextId = -1;
+				else
+					questionPage.NextId = 3;
+					//questionPage.NextId = questions[i + 1].Id;
+			}
+			else
+			{
+				questionPage.NextId = questions[i+1].Id;
+				if (i!=0)
+					questionPage.PrevId = questions[i - 1].Id;
+				else
+					questionPage.PrevId = -1;
+			}
+
+			return View(questionPage);
+
 		}
 
 
