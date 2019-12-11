@@ -1,74 +1,74 @@
 ﻿@model QuestionPageViewModel
 <div>
-	<strong>@Model.Test.Name</strong><br />
-	<form asp-action="TestUser" enctype="multipart/form-data" method="post" class="form-horizontal">
-		@if (!string.IsNullOrEmpty(Model.UrlTest.Name))
+	<strong>@Model.TestName</strong><br />
+	<form asp-action="QuestionPage" enctype="multipart/form-data" method="post" class="form-horizontal">
+		@if (!string.IsNullOrEmpty(Model.UrlTestName))
 		{
-			<label asp-for="UrlTest.Name">Username</label>
-			<input asp-for="UrlTest.Name" class="from-control" disabled="disabled" />
-			<span asp-validation-for="UrlTest.Name" class="text-danger"></span>
+			<label asp-for="UrlTestName">Username</label>
+			<input asp-for="UrlTestName" class="from-control" disabled="disabled" />
+			<span asp-validation-for="UrlTestName" class="text-danger"></span>
 		}
 		else
 		{
-			<label asp-for="UrlTest.Name">Username</label>
-			<input asp-for="UrlTest.Name" class="from-control" />
-			<span asp-validation-for="UrlTest.Name" class="text-danger"></span>
+			<label asp-for="UrlTestName">Username</label>
+			<input asp-for="UrlTestName" class="from-control" />
+			<span asp-validation-for="UrlTestName" class="text-danger"></span>
 		}
 
 		<br />
 		<div type="hidden" class="form-group">
 			<div type="hidden" class="col-md-5">
-				<input type="hidden" asp-for="UrlTestAttend.Id" class="from-control" />
-				<span type="hidden" asp-validation-for="UrlTestAttend.Id" class="text-danger"></span>
-			</div>
-			<div type="hidden" class="col-md-5">
-				<input asp-for="Question.Id" class="from-control" />
-				<span  asp-validation-for="Question.Id" class="text-danger"></span>
-			</div>
-			<div type="hidden" class="col-md-5">
-				<input asp-for="PrevId" class="from-control" />
-				<span  asp-validation-for="PrevId" class="text-danger"></span>
-			</div>
-			<div type="hidden" class="col-md-5">
-				<input asp-for="NextId" class="from-control" />
-				<span asp-validation-for="NextId" class="text-danger"></span>
+				<input type="hidden" asp-for="UrlTestAttendId" class="from-control" />
 			</div>
 		</div>
 		<div>
-			<strong>@Model.Question.Text</strong>
-			@{
-				var i = 1;
-				foreach (var answer in Model.Answers)
-				{
-					<div>
-						<div class="form-group">
-							<input type="hidden" asp-for="Answers[i - 1].Id" class="from-control" />
-							<span type="hidden" asp-validation-for="Answers[i - 1].Id" class="text-danger"></span>
-							<input asp-for="Answers[i - 1].Selected" class="from-control" />@i)@answer.Text
-							<span asp-validation-for="Answers[i - 1].Selected" class="text-danger"></span>
-						</div>
+			@if (Model.Question != null)
+			{
+				<div>
+					<div type="hidden" class="col-md-5">
+						<input type="hidden" asp-for="Question.Id" class="from-control"/>
+						<input type="hidden" asp-for="PrevId" class="from-control" />
+						<input type="hidden" asp-for="NextId" class="from-control" />
 					</div>
-					i++;
-				}
+					@{
+						<strong>@Model.Question.Text</strong>
+						var i = 1;
+						foreach (var answer in Model.Answers)
+						{
+							<div>
+								<div class="form-group">
+									<input type="hidden" asp-for="Answers[i - 1].Id" />
+									<input id="@Model.Answers[i-1].Id" asp-for="Answers[i - 1].Selected"/>@i)@answer.Text
+									<span asp-validation-for="Answers[i - 1].Selected" class="text-danger"></span>
+								</div>
+							</div>
+							i++;
+						}
+					}
+					<br/>
+				</div>
+				@if (Model.PrevId == -1)
+				 {
+					 <input class="btn btn-success" type="submit" value="Prev Page" disabled="disabled"/>
+				 }
+				 else
+				 {
+					 <input class="btn btn-success" type="submit" value="Prev Page" asp-route-id="@Model.PrevId"/>
+				 }
+				@if (Model.NextId == -1)
+				 {
+					 <input class="btn btn-success" type="submit" value="Next Page" disabled="disabled"/>
+				 }
+				 else
+				 {
+					 <input class="btn btn-success" type="submit" value="Next Page" asp-route-id="@Model.NextId"/>
+				 }
+				<input class="btn btn-success" type="submit" value="End test" asp-route-id="-2"/>
 			}
-			<br />
+			else
+			{
+				<input class="btn btn-success" type="submit" value="Start test" asp-route-id="1" />
+			}
 		</div>
-		@if (Model.PrevId == -1)
-		{
-			<input class="btn btn-success" type="submit" value="Prev Page" disabled="disabled" />
-		}
-		else
-		{
-			<input class="btn btn-success" type="submit" value="Prev Page" asp-route-id="@Model.PrevId" />
-		}
-		@if (Model.NextId == -1)
-		{
-			<input class="btn btn-success" type="submit" value="Next Page" disabled="disabled" />
-		}
-		else
-		{
-			<input class="btn btn-success" type="submit" value="Next Page" asp-route-id="@Model.NextId" />
-		}
-		<input class="btn btn-success" type="submit" value="End test" asp-route-id="-2" />
 	</form>
 </div>

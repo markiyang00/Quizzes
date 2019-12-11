@@ -47,6 +47,16 @@ namespace Quizzes
 			{
 				routes.MapRoute("default", "{controller=Admin}/{action=Exit}");
 				routes.MapRoute("userExit", "{controller=Url}/{action=Exit}/{url?}");
+			//	routes.MapRoute(
+			//		name: "Url",
+			//		url: "{controller}/{action}/{id}",
+			//		defaults: new
+			//		{
+			//			controller = "Url",
+			//			action = "Index",
+			//			id = UrlParameter.Optional
+			//		},
+			//	);
 			});
 		}
 	}

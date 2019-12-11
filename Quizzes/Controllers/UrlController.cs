@@ -186,9 +186,8 @@ namespace Quizzes.Controllers
 		{
 			var questionPage=new QuestionPageViewModel();
 			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
-			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id & !a.IsDel).OrderBy(a=>a.Id).ToList();
 			var urlAttends = context.UrlTestAttends.AsNoTracking().Where(a => a.UrlTestUrl == urlTest.Url)
-				.OrderBy(a => a.NumberOfRun).ToList();
+				.OrderByDescending(a => a.NumberOfRun).ToList();
 			var urlAttend = new UrlTestAttend() { UrlTestUrl = urlTest.Url };
 			if (urlAttends.Count == 0)
 				urlAttend.NumberOfRun = 1;
@@ -198,33 +197,41 @@ namespace Quizzes.Controllers
 			context.SaveChanges();
 			var urlAttendBase = context.UrlTestAttends.AsNoTracking().First(a =>
 				a.UrlTestUrl == urlTest.Url & a.NumberOfRun == urlAttend.NumberOfRun);
-			var answers = context.Answers.AsNoTracking().Where(a => a.QuestionId == questions[0].Id).ToList();
-			questionPage.UrlTest = urlTest;
-			questionPage.Answers = answers;
-			questionPage.UrlTestAttend = urlAttendBase;
-			questionPage.Test = test;
-			questionPage.Question = questions[0];
-			questionPage.PrevId = -1;
-			if (questions[1] != null)
-				questionPage.NextId = questions[1].Id;
-			else
-				questionPage.NextId = -1;
-
+			questionPage.UrlTestAttendId = urlAttendBase.Id;
+			questionPage.TestName = test.Name;
+			questionPage.UrlTestName = urlTest.Name;
 			return View(questionPage);
 		}
 
 		[HttpPost]
 		public IActionResult QuestionPage(int id, QuestionPageViewModel userQuestionPage)
 		{
-			var questionPage = new QuestionPageViewModel();
-			var urlAttend = context.UrlTestAttends.AsNoTracking().First(a => a.Id == userQuestionPage.UrlTestAttend.Id);
-			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == urlAttend.UrlTestUrl);
+			var urlAttend = context.UrlTestAttends.AsNoTracking().First(a => a.Id == userQuestionPage.UrlTestAttendId);
+			var urlTest = UrlTestCheck(userQuestionPage, urlAttend);
 			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
 			var urlAttendBase = context.UrlTestAttends.AsNoTracking().First(a =>
 				a.UrlTestUrl == urlTest.Url & a.NumberOfRun == urlAttend.NumberOfRun);
-
 			var resultsBase = context.Results.AsNoTracking()
 				.Where(a => a.UrlTestAttendId == urlAttendBase.Id).ToList();
+			if (userQuestionPage.Answers != null)
+			{
+				var answersUser = AnswersUser(userQuestionPage, resultsBase);
+				AddResult(userQuestionPage, answersUser, urlAttend, urlAttendBase);
+			}
+
+			if (id == -2)
+			{
+				return RedirectToAction("CheckTest", urlAttend);
+			}
+
+			var questions = NewQuestion(id, userQuestionPage, test, urlTest, urlAttendBase, resultsBase);
+			FilledNextPrev(id, userQuestionPage, questions);
+			return View(userQuestionPage);
+		}
+
+
+		private List<Answer> AnswersUser(QuestionPageViewModel userQuestionPage, List<Result> resultsBase)
+		{
 			var answersUser = new List<Answer>();
 			foreach (var result in resultsBase)
 			{
@@ -234,6 +241,61 @@ namespace Quizzes.Controllers
 					answersUser.Add(answer);
 			}
 
+			return answersUser;
+		}
+
+		private List<Question> NewQuestion(int id, QuestionPageViewModel userQuestionPage, Test test, UrlTest urlTest,
+			UrlTestAttend urlAttendBase, List<Result> resultsBase)
+		{
+			userQuestionPage.TestName = test.Name;
+			userQuestionPage.UrlTestName = urlTest.Name;
+			userQuestionPage.UrlTestAttendId = urlAttendBase.Id;
+			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id)
+				.OrderBy(a => a.Id)
+				.ToList();
+
+
+			userQuestionPage.Answers = context.Answers.AsNoTracking().Where(a => a.QuestionId == id).ToList();
+			var answersPage = new List<Answer>();
+			foreach (var result in resultsBase)
+			{
+				var answer = context.Answers.FirstOrDefault(a => a.Id == result.AnswerId & a.QuestionId == id);
+				if (answer != null)
+					answersPage.Add(answer);
+			}
+
+			if (answersPage.Count != 0)
+			{
+				foreach (var answer in answersPage)
+				{
+					userQuestionPage.Answers.Find(a => a.Id == answer.Id).Selected = true;
+				}
+			}
+
+			return questions;
+		}
+
+		private UrlTest UrlTestCheck(QuestionPageViewModel userQuestionPage, UrlTestAttend urlAttend)
+		{
+			var urlTestBase = context.UrlTests.AsNoTracking().First(a => a.Url == urlAttend.UrlTestUrl);
+			var urlTest = urlTestBase;
+			if (!string.IsNullOrEmpty(userQuestionPage.UrlTestName))
+			{
+				if (urlTestBase.Name != userQuestionPage.UrlTestName)
+				{
+					urlTestBase.Name = userQuestionPage.UrlTestName;
+					context.Update(urlTestBase);
+					context.SaveChanges();
+					urlTest = urlTestBase;
+				}
+			}
+
+			return urlTest;
+		}
+
+		private void AddResult(QuestionPageViewModel userQuestionPage, List<Answer> answersUser, UrlTestAttend urlAttend,
+			UrlTestAttend urlAttendBase)
+		{
 			foreach (var answer in userQuestionPage.Answers)
 			{
 				if (answersUser.Count == 0)
@@ -268,61 +330,21 @@ namespace Quizzes.Controllers
 
 
 			context.SaveChanges();
-			if (id == -2)
-			{
-				return RedirectToAction("CheckTest", urlAttend);
-			}
+		}
 
-			questionPage.Test = test;
-			questionPage.UrlTest = urlTest;
-			questionPage.UrlTestAttend = urlAttendBase;
-			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id).OrderBy(a => a.Id)
-				.ToList();
-			var i = 0;
-			foreach (var question in questions)
-			{
-				if (question.Id == id)
-					break;
-				i++;
-			}
+		private static void FilledNextPrev(int id, QuestionPageViewModel userQuestionPage, List<Question> questions)
+		{
+			var i = questions.FindIndex(q => q.Id == id);
 
-			questionPage.Answers = context.Answers.AsNoTracking().Where(a => a.QuestionId == id).ToList();
-			var answersPage = new List<Answer>();
-			foreach (var result in resultsBase)
-			{
-				var answer = context.Answers.FirstOrDefault(a => a.Id == result.AnswerId & a.QuestionId == id);
-				if (answer != null)
-					answersPage.Add(answer);
-			}
-
-			if (answersPage.Count != 0)
-			{
-				foreach (var answer in answersPage)
-				{
-					questionPage.Answers.Find(a => a.Id == answer.Id).Selected = true;
-				}
-			}
-
-			questionPage.Question = questions[i];
-			if (id == userQuestionPage.NextId)
-			{
-				questionPage.PrevId = questions[i-1].Id;
-				if(questions.Count-1==i)
-					questionPage.NextId = -1;
-				else
-					questionPage.NextId = 3;
-					//questionPage.NextId = questions[i + 1].Id;
-			}
+			userQuestionPage.Question = questions[i];
+			if (i != 0)
+				userQuestionPage.PrevId = questions[i - 1].Id;
 			else
-			{
-				questionPage.NextId = questions[i+1].Id;
-				if (i!=0)
-					questionPage.PrevId = questions[i - 1].Id;
-				else
-					questionPage.PrevId = -1;
-			}
-
-			return View(questionPage);
+				userQuestionPage.PrevId = -1;
+			if (questions.Count - 1 == i)
+				userQuestionPage.NextId = -1;
+			else
+				userQuestionPage.NextId = questions[i + 1].Id;
 
 		}
 

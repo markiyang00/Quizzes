@@ -9,8 +9,9 @@ namespace Quizzes.ViewModels
 		public int PrevId { get; set; }
 		public int NextId { get; set; }
 		public List<Answer> Answers { get; set; }
-		public Test Test { get; set; }
-		public UrlTest UrlTest { get; set; }
-		public UrlTestAttend UrlTestAttend { get; set; }
+		public int TestId { get; set; }
+		public string TestName { get; set; }
+		public string UrlTestName { get; set; }
+		public int UrlTestAttendId { get; set; }
 	}
 }
