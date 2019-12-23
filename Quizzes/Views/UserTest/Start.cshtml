@@ -1,0 +1,28 @@
+﻿@model QuestionPageViewModel
+<div>
+	<strong>@Model.TestName</strong><br />
+	<form asp-action="Start" enctype="multipart/form-data" method="post" class="form-horizontal">
+		@if (!string.IsNullOrEmpty(Model.UrlTestName))
+		{
+			<label asp-for="UrlTestName">Username</label>
+			<input asp-for="UrlTestName" class="from-control" disabled="disabled" />
+			<span asp-validation-for="UrlTestName" class="text-danger"></span>
+		}
+		else
+		{
+			<label asp-for="UrlTestName">Username</label>
+			<input asp-for="UrlTestName" class="from-control" />
+			<span asp-validation-for="UrlTestName" class="text-danger"></span>
+		}
+
+		<br />
+		<div type="hidden" class="form-group">
+			<div type="hidden" class="col-md-5">
+				<input type="hidden" asp-for="UrlTestAttendId" class="from-control" />
+			</div>
+		</div>
+		<div>
+			<input class="btn btn-success" type="submit" value="Start test" asp-route-testAttemptId="@Model.UrlTestAttendId" asp-route-id="@Model.QuestionId" />
+		</div>
+	</form>
+</div>

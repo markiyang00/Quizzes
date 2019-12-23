@@ -1,0 +1,10 @@
+﻿@model UrlViewModel
+@{
+	if (Model != null)
+	{
+		if (!string.IsNullOrEmpty(Model.Mes))
+		{
+			<strong>@Model.Mes</strong>
+		}
+	}
+}

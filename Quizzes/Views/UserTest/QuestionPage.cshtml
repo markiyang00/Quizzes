@@ -1,7 +1,7 @@
 ﻿@model QuestionPageViewModel
 <div>
 	<strong>@Model.TestName</strong><br />
-	<form asp-action="QuestionPage" enctype="multipart/form-data" method="post" class="form-horizontal">
+	<form asp-action="QuestionPagePost" enctype="multipart/form-data" method="post" class="form-horizontal">
 		@if (!string.IsNullOrEmpty(Model.UrlTestName))
 		{
 			<label asp-for="UrlTestName">Username</label>
