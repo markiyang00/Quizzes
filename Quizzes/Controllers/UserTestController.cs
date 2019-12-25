@@ -71,10 +71,12 @@ namespace Quizzes.Controllers
 				{
 					urlTestBase.Name = userQuestionPage.UrlTestName;
 					context.Update(urlTestBase);
-					context.SaveChanges();
 				}
 			}
 
+			urlAttend.StartTimeTest=DateTime.Now;
+			context.Update(urlAttend);
+			context.SaveChanges();
 			userQuestionPage.QuestionId = id;
 			return RedirectToAction("QuestionPage");
 		}
@@ -130,7 +132,10 @@ namespace Quizzes.Controllers
 				AddResult(userQuestionPage, answersUser, urlAttend, urlAttendBase);
 			}
 
-			if (id == -2)
+			var dateNow = DateTime.Now;
+			var data = test.TestTime;
+			urlAttend.TestTime = dateNow.Subtract(urlAttendBase.StartTimeTest);
+			if (id == -2| (TimeSpan.Compare(urlAttend.TestTime, data) == 1))
 			{
 				if (string.IsNullOrEmpty(urlTest.Name))
 				{
@@ -139,15 +144,19 @@ namespace Quizzes.Controllers
 					userQuestionPage.Mes = "Not write Username!";
 					return View(userQuestionPage);
 				}
+
+				context.Update(urlAttend);
+				context.SaveChanges();
 				return RedirectToAction("CheckTest");
 			}
+
 			var questions = NewQuestion(id, userQuestionPage, test, urlTest, urlAttendBase, resultsBase);
 			FilledNextPrev(id, userQuestionPage, questions);
 			userQuestionPage.QuestionId = userQuestionPage.Question.Id;
 			return RedirectToAction("QuestionPage","UserTest");
 		}
 
-		public IActionResult CheckAnswers(string url)
+		public IActionResult CheckAnswers(string url,string user)
 		{
 			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == url);
 			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
@@ -155,7 +164,7 @@ namespace Quizzes.Controllers
 			var urlTestAttends = context.UrlTestAttends.AsNoTracking().Where(a => a.UrlTestUrl == url)
 				.OrderBy(a => a.NumberOfRun).ToList();
 			var obj = new UrlAttendsViewModel()
-				{ Name = urlTest.Name, MaxPoint = questions.Count(), UrlTestAttends = urlTestAttends };
+				{ Name = urlTest.Name,User=user, MaxPoint = questions.Count(), UrlTestAttends = urlTestAttends};
 			return View(obj);
 		}
 
@@ -214,7 +223,8 @@ namespace Quizzes.Controllers
 				Name = urlTest.Name,
 				Point = urlTestAttend.Point,
 				MaxPoint = questions.Count,
-				NumberOfRun = urlTestAttend.NumberOfRun
+				NumberOfRun = urlTestAttend.NumberOfRun,
+				TestTime = urlTestAttend.TestTime
 			};
 			return View(urlResult);
 		}

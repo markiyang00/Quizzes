@@ -1,4 +1,5 @@
-﻿using Quizzes.Data.Model;
+﻿using System;
+using Quizzes.Data.Model;
 
 namespace Quizzes.ViewModels
 {
@@ -8,6 +9,7 @@ namespace Quizzes.ViewModels
 		public string Name { get; set; }
 		public int Point { get; set; }
 		public int MaxPoint { get; set; }
+		public TimeSpan TestTime { get; set; }
 		public int NumberOfRun { get; set; }
 	}
 }

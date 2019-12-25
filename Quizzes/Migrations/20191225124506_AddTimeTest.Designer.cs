@@ -10,8 +10,8 @@ using Quizzes.Data;
 namespace Quizzes.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20191204123718_AddUrlTestAttend")]
-    partial class AddUrlTestAttend
+    [Migration("20191225124506_AddTimeTest")]
+    partial class AddTimeTest
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -107,7 +107,7 @@ namespace Quizzes.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<DateTime>("TestTime");
+                    b.Property<TimeSpan>("TestTime");
 
                     b.HasKey("Id");
 
@@ -144,7 +144,9 @@ namespace Quizzes.Migrations
 
                     b.Property<int>("Point");
 
-                    b.Property<DateTime>("TimeTest");
+                    b.Property<DateTime>("StartTimeTest");
+
+                    b.Property<TimeSpan>("TestTime");
 
                     b.Property<string>("UrlTestUrl");
 

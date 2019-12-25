@@ -8,7 +8,7 @@ namespace Quizzes.Data.Model
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public bool IsDel { get; set; }
-		public DateTime TestTime { get; set; }
+		public TimeSpan TestTime { get; set; }
 		public List<Question> Questions { get; set; }
 		public List<UrlTest> UrlTests { get; set; }
 

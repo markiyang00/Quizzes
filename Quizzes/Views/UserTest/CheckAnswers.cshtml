@@ -1,12 +1,16 @@
 ﻿@model UrlAttendsViewModel
 <div>
-	<a class="btn btn-warning" asp-controller="Admin" asp-action="Admin">Admin</a>
+	@if (Model.User == "Admin")
+	{
+		<a class="btn btn-warning" asp-controller="Admin" asp-action="Admin">Admin</a>
+	}
 	<h1>@Model.Name</h1>
 	<table border="1">
 		<tr>
 			<th>Runs Number</th>
 			<th>Score</th>
-			<th>Time run</th>
+			<th>StartTime</th>
+			<th>TestTime</th>
 		</tr>
 		@{
 			var i = 1;
@@ -15,7 +19,8 @@
 				<tr>
 					<td>@i)Run Number-@urlAttend.NumberOfRun</td>
 					<td>@urlAttend.Point/@Model.MaxPoint</td>
-					<td>Time-@urlAttend.TimeTest</td>
+					<td>StartTime-@urlAttend.StartTimeTest</td>
+					<td>TestTime-@urlAttend.TestTime</td>
 				</tr>
 				i++;
 			}

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,7 @@ namespace Quizzes.Controllers
 				var testBase = context.Tests.AsNoTracking().First(a => a.Name == test.Name&!a.IsDel);
 				return RedirectToAction("TestPage",testBase);
 			}
+			
 			return View(test);
 		}
 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Quizzes.Migrations
 {
-    public partial class AddUrlTestAttend : Migration
+    public partial class NewTimeTest : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,7 +30,7 @@ namespace Quizzes.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     IsDel = table.Column<bool>(nullable: false),
-                    TestTime = table.Column<DateTime>(nullable: false)
+                    TestTime = table.Column<TimeSpan>(nullable: false)
                 },
                 constraints: table =>
                 {
