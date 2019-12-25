@@ -115,7 +115,7 @@ namespace Quizzes.Controllers
 
 		[Route("UserTest/QuestionPage/{testAttemptId}/{id}")]
 		[HttpPost]
-		public IActionResult QuestionPagePost(int testAttemptId, int id, QuestionPageViewModel userQuestionPage)
+		public IActionResult QuestionPage(int testAttemptId, int id, QuestionPageViewModel userQuestionPage)
 		{
 			var urlAttend = context.UrlTestAttends.AsNoTracking().First(a => a.Id == testAttemptId);
 			var urlTest = UrlTestCheck(userQuestionPage, urlAttend);
@@ -132,9 +132,12 @@ namespace Quizzes.Controllers
 
 			if (id == -2)
 			{
-				if (string.IsNullOrEmpty(userQuestionPage.UrlTestName))
+				if (string.IsNullOrEmpty(urlTest.Name))
 				{
-					return RedirectToAction("QuestionPage", "UserTest");
+					userQuestionPage.Question=NewQuestion(userQuestionPage.Question.Id, userQuestionPage, test, urlTest, urlAttendBase, resultsBase).Find(a=>a.Id==userQuestionPage.Question.Id);
+					userQuestionPage.QuestionId = userQuestionPage.Question.Id;
+					userQuestionPage.Mes = "Not write Username!";
+					return View(userQuestionPage);
 				}
 				return RedirectToAction("CheckTest");
 			}
