@@ -126,23 +126,40 @@ namespace Quizzes.Controllers
 				.Where(a => a.UrlTestAttendId == urlAttendBase.Id).ToList();
 			if (userQuestionPage.Answers != null)
 			{
-				var answersUser = AnswersUser(id, resultsBase);
+				var answersUser = AnswersUser(userQuestionPage.QuestionId, resultsBase);
 				AddResult(userQuestionPage, answersUser, urlAttend, urlAttendBase);
 			}
 
 			if (id == -2)
 			{
-				return RedirectToAction("CheckTest", urlAttend);
+				if (string.IsNullOrEmpty(userQuestionPage.UrlTestName))
+				{
+					return RedirectToAction("QuestionPage", "UserTest");
+				}
+				return RedirectToAction("CheckTest");
 			}
-
 			var questions = NewQuestion(id, userQuestionPage, test, urlTest, urlAttendBase, resultsBase);
 			FilledNextPrev(id, userQuestionPage, questions);
 			userQuestionPage.QuestionId = userQuestionPage.Question.Id;
 			return RedirectToAction("QuestionPage","UserTest");
 		}
 
-		public IActionResult CheckTest(UrlTestAttend urlTestAttend)
+		public IActionResult CheckAnswers(string url)
 		{
+			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == url);
+			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
+			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id & !a.IsDel);
+			var urlTestAttends = context.UrlTestAttends.AsNoTracking().Where(a => a.UrlTestUrl == url)
+				.OrderBy(a => a.NumberOfRun).ToList();
+			var obj = new UrlAttendsViewModel()
+				{ Name = urlTest.Name, MaxPoint = questions.Count(), UrlTestAttends = urlTestAttends };
+			return View(obj);
+		}
+
+		[Route("UserTest/CheckTest/{testAttemptId}")]
+		public IActionResult CheckTest(int testAttemptId)
+		{
+			var urlTestAttend = context.UrlTestAttends.AsNoTracking().First(a => a.Id == testAttemptId);
 			var point = 0;
 			var results = context.Results.AsNoTracking().Where(a => a.UrlTestAttendId == urlTestAttend.Id).ToList();
 			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == urlTestAttend.UrlTestUrl);
@@ -190,6 +207,7 @@ namespace Quizzes.Controllers
 			context.SaveChanges();
 			var urlResult = new UrlResultViewModel()
 			{
+				Url = urlTest.Url,
 				Name = urlTest.Name,
 				Point = urlTestAttend.Point,
 				MaxPoint = questions.Count,

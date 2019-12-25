@@ -1,6 +1,10 @@
 ﻿@model UrlResultViewModel
-	<div>
-		<h1>@Model.Name</h1>
-		<h2>Number Of Run-@Model.NumberOfRun</h2>
-		<h2>@Model.Point/@Model.MaxPoint</h2>
-	</div>
+<div>
+	@*<div type="hidden" class="col-md-5">
+		<input type="hidden" asp-for="Url" class="from-control" />
+	</div>*@
+	<h1>@Model.Name</h1>
+	<h2>Number Of Run-@Model.NumberOfRun</h2>
+	<h2>@Model.Point/@Model.MaxPoint</h2>
+	<h1><a class="btn btn-warning" asp-controller="UserTest" asp-action="CheckAnswers" asp-route-url="@Model.Url">All Result</a></h1>
+</div>
