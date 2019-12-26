@@ -18,6 +18,7 @@
 										<div>
 											<strong>@j)@answer.Text</strong>
 											<a class="btn btn-warning" asp-controller="Test" asp-action="UpdatedAnswer" asp-route-id="@answer.Id">Edit Answer</a>
+											<a class="btn btn-warning" asp-controller="Test" asp-action="DelAnswer" asp-route-id="@answer.Id">Del Answer</a>
 										</div>
 										j++;
 									}
@@ -26,7 +27,8 @@
 								<br />
 							}
 						</div>
-						<a class="btn btn-warning" asp-controller="Test" asp-action="UpdatedQuestions" asp-route-id="@question.Id">Edit Question</a><br/>
+						<a class="btn btn-warning" asp-controller="Test" asp-action="UpdatedQuestions" asp-route-id="@question.Id">Edit Question</a>
+						<a class="btn btn-warning" asp-controller="Test" asp-action="DelQuestions" asp-route-id="@question.Id">Del Question</a><br/>
 						i++;
 					}
 

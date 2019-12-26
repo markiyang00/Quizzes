@@ -46,6 +46,11 @@ namespace Quizzes.Controllers
 			return View(obg);
 		}
 
+		public IActionResult CreateUrlTest(string url)
+		{
+			return View(url);
+		}
+
 		public IActionResult AddUrlTest(int id)
 		{
 			var urlTest = new UrlTest() { TestId = id };
