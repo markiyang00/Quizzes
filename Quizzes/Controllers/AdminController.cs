@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Quizzes.Data;
 using Quizzes.Data.Model;
 using Quizzes.ViewModels;
@@ -48,7 +49,8 @@ namespace Quizzes.Controllers
 
 		public IActionResult CreateUrlTest(string url)
 		{
-			return View(url);
+			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == url);
+			return View(urlTest);
 		}
 
 		public IActionResult AddUrlTest(int id)

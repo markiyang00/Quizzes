@@ -107,7 +107,7 @@ namespace Quizzes.Controllers
 				{
 					context.Answers.Add(answer);
 					context.SaveChanges();
-					return RedirectToAction("UpdatedTest", new { id = answer.QuestionId });
+					return RedirectToAction("UpdatedQuestions", new { id = answer.QuestionId });
 				}
 				context.Update(answer);
 				context.SaveChanges();

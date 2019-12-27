@@ -14,6 +14,7 @@ namespace Quizzes.ViewModels
 		public string Mes { get; set; }
 		public string TestName { get; set; }
 		public string UrlTestName { get; set; }
+		public string Url { get; set; }
 		public int UrlTestAttendId { get; set; }
 	}
 }

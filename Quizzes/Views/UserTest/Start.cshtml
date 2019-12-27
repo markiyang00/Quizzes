@@ -2,6 +2,10 @@
 <div>
 	<strong>@Model.TestName</strong><br />
 	<form asp-action="Start" enctype="multipart/form-data" method="post" class="form-horizontal">
+		@if (!string.IsNullOrEmpty(Model.Mes))
+		{
+			<h1>@Model.Mes</h1>
+		}
 		@if (!string.IsNullOrEmpty(Model.UrlTestName))
 		{
 			<label asp-for="UrlTestName">Username</label>
@@ -18,11 +22,11 @@
 		<br />
 		<div type="hidden" class="form-group">
 			<div type="hidden" class="col-md-5">
-				<input type="hidden" asp-for="UrlTestAttendId" class="from-control" />
+				<input type="hidden" asp-for="Url" class="from-control" />
 			</div>
 		</div>
 		<div>
-			<input class="btn btn-success" type="submit" value="Start test" asp-route-testAttemptId="@Model.UrlTestAttendId" asp-route-id="@Model.QuestionId" />
+			<input class="btn btn-success" type="submit" value="Start test" asp-route-id="@Model.QuestionId" />
 		</div>
 	</form>
 </div>

@@ -59,26 +59,42 @@ namespace Quizzes.Controllers
 			return RedirectToAction("Mes", urlModel2);
 		}
 
-		[Route("UserTest/Start/{testAttemptId}/{id}")]
+		[Route("UserTest/Start/{id}")]
 		[HttpPost]
-		public IActionResult Start(int testAttemptId, int id,QuestionPageViewModel userQuestionPage)
+		public IActionResult Start(int id,QuestionPageViewModel userQuestionPage)
 		{
-			var urlAttend = context.UrlTestAttends.AsNoTracking().First(a => a.Id == testAttemptId);
-			var urlTestBase = context.UrlTests.AsNoTracking().First(a => a.Url == urlAttend.UrlTestUrl);
+			userQuestionPage.QuestionId = id;
+			var urlTestBase = context.UrlTests.AsNoTracking().First(a => a.Url == userQuestionPage.Url);
 			if (!string.IsNullOrEmpty(userQuestionPage.UrlTestName))
 			{
 				if (urlTestBase.Name != userQuestionPage.UrlTestName)
 				{
 					urlTestBase.Name = userQuestionPage.UrlTestName;
 					context.Update(urlTestBase);
+					context.SaveChanges();
 				}
 			}
 
-			urlAttend.StartTimeTest=DateTime.Now;
-			context.Update(urlAttend);
+			if (string.IsNullOrEmpty(urlTestBase.Name))
+			{
+				userQuestionPage.TestName = context.Tests.First(a => a.Id == urlTestBase.TestId&!a.IsDel).Name;
+				userQuestionPage.Mes = "Write Name";
+				return View(userQuestionPage);
+			}
+			var urlAttends = context.UrlTestAttends.AsNoTracking().Where(a => a.UrlTestUrl == userQuestionPage.Url)
+				.OrderByDescending(a => a.NumberOfRun).ToList();
+			var urlAttend = new UrlTestAttend() { UrlTestUrl = userQuestionPage.Url };
+			if (urlAttends.Count == 0)
+				urlAttend.NumberOfRun = 1;
+			else
+				urlAttend.NumberOfRun = urlAttends[0].NumberOfRun + 1;
+			urlAttend.StartTimeTest = DateTime.Now;
+			context.UrlTestAttends.Add(urlAttend);
 			context.SaveChanges();
-			userQuestionPage.QuestionId = id;
-			return RedirectToAction("QuestionPage");
+			var urlAttendBase = context.UrlTestAttends.AsNoTracking().First(a =>
+				a.UrlTestUrl == userQuestionPage.Url & a.NumberOfRun == urlAttend.NumberOfRun);
+
+			return RedirectToAction("QuestionPage",new{ testAttemptId=urlAttendBase.Id,id});
 		}
 
 		[Route("UserTest/QuestionPage/{testAttemptId}/{id}")]
@@ -124,7 +140,7 @@ namespace Quizzes.Controllers
 		public IActionResult QuestionPage(int testAttemptId, int id, QuestionPageViewModel userQuestionPage)
 		{
 			var urlAttend = context.UrlTestAttends.AsNoTracking().First(a => a.Id == testAttemptId);
-			var urlTest = UrlTestCheck(userQuestionPage, urlAttend);
+			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == urlAttend.UrlTestUrl);
 			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
 			var urlAttendBase = context.UrlTestAttends.AsNoTracking().First(a =>
 				a.UrlTestUrl == urlTest.Url & a.NumberOfRun == urlAttend.NumberOfRun);
@@ -180,7 +196,7 @@ namespace Quizzes.Controllers
 			var point = 0;
 			var results = context.Results.AsNoTracking().Where(a => a.UrlTestAttendId == urlTestAttend.Id).ToList();
 			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == urlTestAttend.UrlTestUrl);
-			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
+			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId&!a.IsDel);
 			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id & !a.IsDel)
 				.OrderBy(a => a.Id).ToList();
 			var answers = new List<Answer>();
@@ -237,19 +253,7 @@ namespace Quizzes.Controllers
 		private QuestionPageViewModel CreateQuestionPage(UrlTest urlTest)
 		{
 			var questionPage = new QuestionPageViewModel();
-			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
-			var urlAttends = context.UrlTestAttends.AsNoTracking().Where(a => a.UrlTestUrl == urlTest.Url)
-				.OrderByDescending(a => a.NumberOfRun).ToList();
-			var urlAttend = new UrlTestAttend() {UrlTestUrl = urlTest.Url};
-			if (urlAttends.Count == 0)
-				urlAttend.NumberOfRun = 1;
-			else
-				urlAttend.NumberOfRun = urlAttends[0].NumberOfRun + 1;
-			context.UrlTestAttends.Add(urlAttend);
-			context.SaveChanges();
-			var urlAttendBase = context.UrlTestAttends.AsNoTracking().First(a =>
-				a.UrlTestUrl == urlTest.Url & a.NumberOfRun == urlAttend.NumberOfRun);
-			questionPage.UrlTestAttendId = urlAttendBase.Id;
+			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId&!a.IsDel);
 			questionPage.TestName = test.Name;
 			questionPage.UrlTestName = urlTest.Name;
 			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id & !a.IsDel).OrderBy(a => a.Id)
@@ -279,7 +283,7 @@ namespace Quizzes.Controllers
 			userQuestionPage.TestName = test.Name;
 			userQuestionPage.UrlTestName = urlTest.Name;
 			userQuestionPage.UrlTestAttendId = urlAttendBase.Id;
-			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id)
+			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id & !a.IsDel)
 				.OrderBy(a => a.Id)
 				.ToList();
 
@@ -302,24 +306,6 @@ namespace Quizzes.Controllers
 			}
 
 			return questions;
-		}
-
-		private UrlTest UrlTestCheck(QuestionPageViewModel userQuestionPage, UrlTestAttend urlAttend)
-		{
-			var urlTestBase = context.UrlTests.AsNoTracking().First(a => a.Url == urlAttend.UrlTestUrl);
-			var urlTest = urlTestBase;
-			if (!string.IsNullOrEmpty(userQuestionPage.UrlTestName))
-			{
-				if (urlTestBase.Name != userQuestionPage.UrlTestName)
-				{
-					urlTestBase.Name = userQuestionPage.UrlTestName;
-					context.Update(urlTestBase);
-					context.SaveChanges();
-					urlTest = urlTestBase;
-				}
-			}
-
-			return urlTest;
 		}
 
 		private void AddResult(QuestionPageViewModel userQuestionPage, List<Answer> answersUser, UrlTestAttend urlAttend,

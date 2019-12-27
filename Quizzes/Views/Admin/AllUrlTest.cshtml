@@ -16,7 +16,7 @@
 			{
 				<tr>
 					<td>@i)</td>
-					<td>@url.Url</td>
+					<td>https://localhost:44336/UserTest/Start/@url.Url</td>
 					<td>@{
 						    if (url.NumberOfRuns != null)
 						    {
@@ -30,7 +30,7 @@
 					<td>@url.Time</td>
 					<td>@url.Name</td>
 					<td><a class="btn btn-warning" asp-controller="Admin" asp-action="CreateUrlTest" asp-route-url="@url.Url" asp-route-user="Admin">CreateUrl</a></td>
-					<td><a class="btn btn-warning" asp-controller="UserTest" asp-action="CheckAnswers" asp-route-url="@url.Url" asp-route-user="Admin">All Point</a></td>
+					<td><a class="btn btn-warning" asp-controller="UserTest" asp-action="CheckAnswers" asp-route-url="@url.Url" asp-route-user="Admin">All Result</a></td>
 				</tr>
 				i++;
 			}
