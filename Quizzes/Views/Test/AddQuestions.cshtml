@@ -1,6 +1,6 @@
 ﻿@model QuestionUpdatedViewModel
 <div class="row">
-	<h3>Edit Question</h3>
+	<h3>New Question</h3>
 	<form asp-action="UpdatedQuestions" enctype="multipart/form-data" method="post" class="form-horizontal">
 		<br />
 		<br />
@@ -21,31 +21,7 @@
 			<input asp-for="Question.Text" class="from-control" />
 			<span asp-validation-for="Question.Text" class="text-danger"></span>
 		</div><br />
-		<table border="1">
-			<tr>
-				<th>№</th>
-				<th>Text</th>
-				<th>True</th>
-				<th>Edit</th>
-				<th>Del</th>
-			</tr>
-			@{
-				var i = 1;
-				foreach (var answer in Model.Answers)
-				{
-					<tr>
-						<td>@i)</td>
-						<td>@answer.Text</td>
-						<td>@answer.True</td>
-						<td><a class="btn btn-warning" asp-controller="Test" asp-action="UpdatedAnswer" asp-route-id="@answer.Id">Edit Answer</a></td>
-						<td><a class="btn btn-warning" asp-controller="Test" asp-action="DelAnswer" asp-route-id="@answer.Id">Del Answer</a></td>
-					</tr>
-					i++;
-				}
-			}
-		</table>
-		<a class="btn btn-warning" asp-controller="Test" asp-action="AddAnswer" asp-route-id="@Model.Question.Id">Add Answer</a><br />
 		<a class="btn btn-warning" asp-controller="Test" asp-action="UpdatedTest" asp-route-id="@Model.Question.TestId">Edit Test</a>
-		<input class="btn btn-success" type="submit" value="Edit Question" />
+		<input class="btn btn-success" type="submit" value="Add Question" />
 	</form>
 </div>
