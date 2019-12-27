@@ -86,6 +86,10 @@ namespace Quizzes.Controllers
 		{
 			var questionPage = new QuestionPageViewModel();
 			var urlAttend = context.UrlTestAttends.AsNoTracking().First(a => a.Id == testAttemptId);
+			if (urlAttend.IsEnd)
+			{
+				return RedirectToAction("CheckTest");
+			}
 			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == urlAttend.UrlTestUrl);
 			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
 			var urlAttendBase = context.UrlTestAttends.AsNoTracking().First(a =>
@@ -145,6 +149,7 @@ namespace Quizzes.Controllers
 					return View(userQuestionPage);
 				}
 
+				urlAttend.IsEnd = true;
 				context.Update(urlAttend);
 				context.SaveChanges();
 				return RedirectToAction("CheckTest");

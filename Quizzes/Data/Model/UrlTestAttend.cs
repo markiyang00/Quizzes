@@ -11,6 +11,7 @@ namespace Quizzes.Data.Model
 		public DateTime StartTimeTest { get; set; }
 		public TimeSpan TestTime { get; set; }
 		public string UrlTestUrl { get; set; }
+		public bool IsEnd { get; set; }
 		public List<Result> Results { get; set; }
 		public virtual UrlTest UrlTest{ get; set; }
 	}

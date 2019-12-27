@@ -25,7 +25,8 @@
 			<label asp-for="True"></label>
 			<input asp-for="True" class="from-control" />
 			<span asp-validation-for="True" class="text-danger"></span>
-		</div><br/>
+		</div><br />
+		<a class="btn btn-warning" asp-controller="Test" asp-action="UpdatedQuestions" asp-route-id="@Model.QuestionId">Edit Questions</a>
 		<input class="btn btn-success" type="submit" value="Edit Answer" />
 	</form>
 </div>

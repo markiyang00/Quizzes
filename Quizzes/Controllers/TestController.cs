@@ -97,39 +97,49 @@ namespace Quizzes.Controllers
 		public IActionResult UpdatedTest(int id)
 		{
 			var testBase = context.Tests.AsNoTracking().First(a => a.Id == id & !a.IsDel);
-			return View(testBase);
+			var obg = new TestUpdatedViewModel
+			{
+				Test = testBase,
+				Questions = context.Questions.AsNoTracking().Where(a => a.TestId == id & !a.IsDel).ToList()
+			};
+			return View(obg);
 		}
 
 		[HttpPost]
-		public IActionResult UpdatedTest(Test test)
+		public IActionResult UpdatedTest(TestUpdatedViewModel testModel)
 		{
 			if (ModelState.IsValid)
 			{
-				context.Update(test);
+				context.Update(testModel.Test);
 				context.SaveChanges();
-				var testBase = context.Tests.AsNoTracking().First(a => a.Name == test.Name & !a.IsDel);
-				return RedirectToAction("TestPage", testBase);
 			}
-			return View(test);
+
+			testModel.Questions = context.Questions.AsNoTracking().Where(a => a.TestId == testModel.Test.Id & !a.IsDel).ToList();
+			return View(testModel);
 		}
 
 		public IActionResult UpdatedQuestions(int id)
 		{
 			var question = context.Questions.First(a => a.Id == id & !a.IsDel);
-			return View(question);
+			var obg = new QuestionUpdatedViewModel
+			{
+				Question = question,
+				Answers = context.Answers.AsNoTracking().Where(a => a.QuestionId == id).ToList()
+			};
+			return View(obg);
 		}
 
 		[HttpPost]
-		public IActionResult UpdatedQuestions(Question question)
+		public IActionResult UpdatedQuestions(QuestionUpdatedViewModel questionModel)
 		{
 			if (ModelState.IsValid)
 			{
-				context.Update(question);
+				context.Update(questionModel.Question);
 				context.SaveChanges();
-				var testBase = context.Tests.AsNoTracking().First(a => a.Id == question.TestId & !a.IsDel);
-				return RedirectToAction("TestPage", testBase);
 			}
-			return View(question);
+
+			questionModel.Answers = context.Answers.AsNoTracking().Where(a => a.QuestionId == questionModel.Question.Id).ToList();
+			return View(questionModel);
 		}
 
 		public IActionResult UpdatedAnswer(int id)
@@ -145,9 +155,6 @@ namespace Quizzes.Controllers
 			{
 				context.Update(answer);
 				context.SaveChanges();
-				var question = context.Questions.First(a => a.Id == answer.QuestionId & !a.IsDel);
-				var testBase = context.Tests.AsNoTracking().First(a => a.Id == question.TestId & !a.IsDel);
-				return RedirectToAction("TestPage", testBase);
 			}
 			return View(answer);
 		}
