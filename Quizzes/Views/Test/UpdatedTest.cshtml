@@ -7,7 +7,6 @@
 		<div type="hidden" class="form-group">
 			<div type="hidden" class="col-md-5">
 				<input type="hidden" asp-for="Test.Id" class="from-control" />
-				<span type="hidden" asp-validation-for="Test.Id" class="text-danger"></span>
 			</div>
 		</div>
 		<div class="form-group">
@@ -20,28 +19,39 @@
 			<input asp-for="Test.TestTime" class="from-control" />
 			<span asp-validation-for="Test.TestTime" class="text-danger"></span>
 		</div><br />
-		<table border="1">
-			<tr>
-				<th>№</th>
-				<th>Text</th>
-				<th>Edit</th>
-				<th>Del</th>
-			</tr>
-			@{
-				var i = 1;
-				foreach (var question in Model.Questions)
-				{
+		@{
+			if (Model.Questions != null)
+			{
+				<table border="1">
 					<tr>
-						<td>@i)</td>
-						<td>@question.Text</td>
-						<td><a class="btn btn-warning" asp-controller="Test" asp-action="UpdatedQuestions" asp-route-id="@question.Id">Edit Question</a></td>
-						<td><a class="btn btn-warning" asp-controller="Test" asp-action="DelQuestions" asp-route-id="@question.Id">Del Question</a><br /></td>
+						<th>№</th>
+						<th>Text</th>
+						<th>Edit</th>
+						<th>Del</th>
 					</tr>
-					i++;
-				}
+					@{
+						var i = 1;
+						foreach (var question in Model.Questions)
+						{
+							<tr>
+								<td>@i)</td>
+								<td>@question.Text</td>
+								<td><a class="btn btn-warning" asp-controller="Test" asp-action="UpdatedQuestions" asp-route-id="@question.Id">Edit Question</a></td>
+								<td><a class="btn btn-warning" asp-controller="Test" asp-action="DelQuestions" asp-route-id="@question.Id">Del Question</a><br/></td>
+							</tr>
+							i++;
+						}
+					}
+				</table>
 			}
-		</table>
-		<a class="btn btn-warning" asp-controller="Admin" asp-action="Admin" >Admin</a>
+
+			if (Model.Test != null)
+			{
+				<a class="btn btn-warning" asp-controller="Test" asp-action="AddQuestions" asp-route-testId="@Model.Test.Id">Add Question</a>
+			}
+			
+		}
+		<a class="btn btn-warning" asp-controller="Admin" asp-action="Admin">Admin</a>
 		<input class="btn btn-success" type="submit" value="Edit Test" />
 	</form>
 </div>

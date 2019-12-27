@@ -25,17 +25,14 @@ namespace Quizzes.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult AddTest(Test test)
+		public IActionResult AddTest(TestUpdatedViewModel testModel)
 		{
 			if (ModelState.IsValid)
 			{
-				context.Tests.Add(test);
+				context.Tests.Add(testModel.Test);
 				context.SaveChanges();
-				var testBase = context.Tests.AsNoTracking().First(a => a.Name == test.Name&!a.IsDel);
-				return RedirectToAction("TestPage",testBase);
 			}
-			
-			return View(test);
+			return View(testModel);
 		}
 
 		public IActionResult TestPage(Test test)
@@ -108,13 +105,20 @@ namespace Quizzes.Controllers
 		[HttpPost]
 		public IActionResult UpdatedTest(TestUpdatedViewModel testModel)
 		{
-			if (ModelState.IsValid)
+			if (testModel.Test.Id == 0)
+			{
+				context.Tests.Add(testModel.Test);
+				context.SaveChanges();
+			}
+			else
 			{
 				context.Update(testModel.Test);
 				context.SaveChanges();
 			}
 
-			testModel.Questions = context.Questions.AsNoTracking().Where(a => a.TestId == testModel.Test.Id & !a.IsDel).ToList();
+			testModel.Test = context.Tests.AsNoTracking().FirstOrDefault(a => a.Id == testModel.Test.Id & !a.IsDel);
+			testModel.Questions = context.Questions.AsNoTracking().Where(a => a.TestId == testModel.Test.Id & !a.IsDel)
+				.ToList();
 			return View(testModel);
 		}
 

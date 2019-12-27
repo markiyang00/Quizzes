@@ -1,19 +1,26 @@
-﻿@model Test
+﻿@model TestUpdatedViewModel
 <div class="row">
 	<h3>Add Test</h3>
-	<form asp-action="AddTest" enctype="multipart/form-data" method="post" class="form-horizontal">
+	<form asp-action="UpdatedTest" enctype="multipart/form-data" method="post" class="form-horizontal">
 		<br />
 		<br />
-		<div class="form-group">
-			<label asp-for="Name"></label>
-			<input asp-for="Name" class="from-control" />
-			<span asp-validation-for="Name" class="text-danger"></span>
+		<div type="hidden" class="form-group">
+			<div type="hidden" class="col-md-5">
+				<input type="hidden" asp-for="Test.Id" class="from-control" />
+				<span type="hidden" asp-validation-for="Test.Id" class="text-danger"></span>
+			</div>
 		</div>
 		<div class="form-group">
-			<label asp-for="TestTime"></label>
-			<input asp-for="TestTime" class="from-control" />
-			<span asp-validation-for="TestTime" class="text-danger"></span>
-		</div><br/>
-		<input class="btn btn-success" type="submit" value="Add Test" />
+			<label asp-for="Test.Name"></label>
+			<input asp-for="Test.Name" class="from-control" />
+			<span asp-validation-for="Test.Name" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Test.TestTime"></label>
+			<input asp-for="Test.TestTime" class="from-control" />
+			<span asp-validation-for="Test.TestTime" class="text-danger"></span>
+		</div><br />
+		<a class="btn btn-warning" asp-controller="Admin" asp-action="Admin">Admin</a>
+		<input class="btn btn-success" type="submit" value="Add Test">
 	</form>
 </div>
