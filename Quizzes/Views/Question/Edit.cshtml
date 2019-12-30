@@ -37,14 +37,14 @@
 						<td>@i)</td>
 						<td>@answer.Text</td>
 						<td>@answer.True</td>
-						<td><a class="btn btn-warning" asp-controller="Test" asp-action="Edit" asp-route-id="@answer.Id">Edit Answer</a></td>
-						<td><a class="btn btn-warning" asp-controller="Test" asp-action="DelAnswer" asp-route-id="@answer.Id">Del Answer</a></td>
+						<td><a asp-controller="Answer" asp-action="Edit" asp-route-id="@answer.Id"><img src="@Model.ImgEdit" alt="Edit" width="30" height="30" /></a></td>
+						<td><a asp-controller="Answer" asp-action="Del" asp-route-id="@answer.Id"><img src="@Model.ImgDel" alt="Del" width="30" height="30" /></a></td>
 					</tr>
 					i++;
 				}
 			}
 		</table>
-		<a class="btn btn-warning" asp-controller="Test" asp-action="Add" asp-route-id="@Model.Question.Id">Add Answer</a><br/>
+		<a class="btn btn-warning" asp-controller="Answer" asp-action="Add" asp-route-id="@Model.Question.Id">Add Answer</a><br/>
 																																<a class="btn btn-warning" asp-controller="Test" asp-action="Edit" asp-route-id="@Model.Question.TestId">Back to Test</a>
 		<input class="btn btn-success" type="submit" value="Save Changes" />
 	</form>

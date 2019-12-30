@@ -33,7 +33,9 @@ namespace Quizzes.Controllers
 			var obg = new QuestionUpdatedViewModel
 			{
 				Question = question,
-				Answers = context.Answers.AsNoTracking().Where(a => a.QuestionId == id).ToList()
+				Answers = context.Answers.AsNoTracking().Where(a => a.QuestionId == id).ToList(),
+				ImgDel = "/img/Delete.jpg",
+				ImgEdit = "/img/Edit.jpg"
 			};
 			return View(obg);
 		}

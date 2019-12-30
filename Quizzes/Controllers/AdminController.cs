@@ -44,7 +44,7 @@ namespace Quizzes.Controllers
 		public ViewResult Admin(Admin admin)
 		{
 			var tests = context.Tests.Where(a => !a.IsDel).ToList();
-			var obg = new AdminTestViewModel() {Admin = admin, Tests = tests};
+			var obg = new AdminTestViewModel() {Admin = admin, Tests = tests,ImgEdit = "/img/Edit.jpg" ,ImgDel = "/img/Delete.jpg" };
 			return View(obg);
 		}
 

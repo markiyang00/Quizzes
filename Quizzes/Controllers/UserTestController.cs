@@ -104,7 +104,7 @@ namespace Quizzes.Controllers
 			var urlAttend = context.UrlTestAttends.AsNoTracking().First(a => a.Id == testAttemptId);
 			if (urlAttend.IsEnd)
 			{
-				return RedirectToAction("CheckTest","Admin");
+				return RedirectToAction("CheckTest","Result");
 			}
 			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == urlAttend.UrlTestUrl);
 			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
@@ -168,7 +168,7 @@ namespace Quizzes.Controllers
 				urlAttend.IsEnd = true;
 				context.Update(urlAttend);
 				context.SaveChanges();
-				return RedirectToAction("CheckTest","Admin");
+				return RedirectToAction("CheckTest","Result");
 			}
 
 			var questions = NewQuestion(id, userQuestionPage, test, urlTest, urlAttendBase, resultsBase);

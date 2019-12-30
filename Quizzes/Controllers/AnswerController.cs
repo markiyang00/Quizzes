@@ -45,7 +45,7 @@ namespace Quizzes.Controllers
 			return View(answer);
 		}
 
-		public IActionResult DelAnswer(int id)
+		public IActionResult Del(int id)
 		{
 			var elem = context.Answers.AsNoTracking().First(p => p.Id == id);
 			context.Remove(elem);

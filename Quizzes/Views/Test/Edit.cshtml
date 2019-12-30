@@ -36,8 +36,8 @@
 							<tr>
 								<td>@i)</td>
 								<td>@question.Text</td>
-								<td><a class="btn btn-warning" asp-controller="Test" asp-action="Edit" asp-route-id="@question.Id">Edit Question</a></td>
-								<td><a class="btn btn-warning" asp-controller="Test" asp-action="Del" asp-route-id="@question.Id">Del Question</a><br/></td>
+								<td><a asp-controller="Question" asp-action="Edit" asp-route-id="@question.Id" ><img src="@Model.ImgEdit" alt="Edit" width="30" height="30" /></a></td>
+								<td><a asp-controller="Question" asp-action="Del" asp-route-id="@question.Id"><img src="@Model.ImgDel" alt="Del" width="30" height="30" /></a></td>
 							</tr>
 							i++;
 						}
@@ -47,7 +47,7 @@
 
 			if (Model.Test != null)
 			{
-				<a class="btn btn-warning" asp-controller="Test" asp-action="Add" asp-route-testId="@Model.Test.Id">Add Question</a>
+				<a class="btn btn-warning" asp-controller="Question" asp-action="Add" asp-route-testId="@Model.Test.Id">Add Question</a>
 			}
 			
 		}

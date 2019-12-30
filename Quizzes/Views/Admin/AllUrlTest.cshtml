@@ -8,7 +8,8 @@
 			<th>Runs Number</th>
 			<th>Time</th>
 			<th>Name</th>
-			<th>TestTime</th>
+			<th>CreateUrl</th>
+			<th>Results</th>
 		</tr>
 		@{
 			var i = 1;
@@ -30,7 +31,7 @@
 					<td>@url.Time</td>
 					<td>@url.Name</td>
 					<td><a class="btn btn-warning" asp-controller="Admin" asp-action="CreateUrlTest" asp-route-url="@url.Url" asp-route-user="Admin">CreateUrl</a></td>
-					<td><a class="btn btn-warning" asp-controller="UserTest" asp-action="CheckAnswers" asp-route-url="@url.Url" asp-route-user="Admin">All Result</a></td>
+					<td><a class="btn btn-warning" asp-controller="Result" asp-action="CheckAnswers" asp-route-url="@url.Url" asp-route-user="Admin">All Result</a></td>
 				</tr>
 				i++;
 			}

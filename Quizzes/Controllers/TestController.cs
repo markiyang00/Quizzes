@@ -31,7 +31,9 @@ namespace Quizzes.Controllers
 			var obg = new TestUpdatedViewModel
 			{
 				Test = testBase,
-				Questions = context.Questions.AsNoTracking().Where(a => a.TestId == id & !a.IsDel).ToList()
+				Questions = context.Questions.AsNoTracking().Where(a => a.TestId == id & !a.IsDel).ToList(),
+				ImgDel = "/img/Delete.jpg",
+				ImgEdit = "/img/Edit.jpg"
 			};
 			return View(obg);
 		}
