@@ -1,7 +1,7 @@
 ﻿@model TestUpdatedViewModel
 <div class="row">
 	<h3>Edit Test</h3>
-	<form asp-action="UpdatedTest" enctype="multipart/form-data" method="post" class="form-horizontal">
+	<form asp-action="Edit" enctype="multipart/form-data" method="post" class="form-horizontal">
 		<br />
 		<br />
 		<div type="hidden" class="form-group">
@@ -36,8 +36,8 @@
 							<tr>
 								<td>@i)</td>
 								<td>@question.Text</td>
-								<td><a class="btn btn-warning" asp-controller="Test" asp-action="UpdatedQuestions" asp-route-id="@question.Id">Edit Question</a></td>
-								<td><a class="btn btn-warning" asp-controller="Test" asp-action="DelQuestions" asp-route-id="@question.Id">Del Question</a><br/></td>
+								<td><a class="btn btn-warning" asp-controller="Test" asp-action="Edit" asp-route-id="@question.Id">Edit Question</a></td>
+								<td><a class="btn btn-warning" asp-controller="Test" asp-action="Del" asp-route-id="@question.Id">Del Question</a><br/></td>
 							</tr>
 							i++;
 						}
@@ -47,7 +47,7 @@
 
 			if (Model.Test != null)
 			{
-				<a class="btn btn-warning" asp-controller="Test" asp-action="AddQuestions" asp-route-testId="@Model.Test.Id">Add Question</a>
+				<a class="btn btn-warning" asp-controller="Test" asp-action="Add" asp-route-testId="@Model.Test.Id">Add Question</a>
 			}
 			
 		}

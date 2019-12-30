@@ -104,7 +104,7 @@ namespace Quizzes.Controllers
 			var urlAttend = context.UrlTestAttends.AsNoTracking().First(a => a.Id == testAttemptId);
 			if (urlAttend.IsEnd)
 			{
-				return RedirectToAction("CheckTest");
+				return RedirectToAction("CheckTest","Admin");
 			}
 			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == urlAttend.UrlTestUrl);
 			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
@@ -168,86 +168,13 @@ namespace Quizzes.Controllers
 				urlAttend.IsEnd = true;
 				context.Update(urlAttend);
 				context.SaveChanges();
-				return RedirectToAction("CheckTest");
+				return RedirectToAction("CheckTest","Admin");
 			}
 
 			var questions = NewQuestion(id, userQuestionPage, test, urlTest, urlAttendBase, resultsBase);
 			FilledNextPrev(id, userQuestionPage, questions);
 			userQuestionPage.QuestionId = userQuestionPage.Question.Id;
 			return RedirectToAction("QuestionPage","UserTest");
-		}
-
-		public IActionResult CheckAnswers(string url,string user)
-		{
-			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == url);
-			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId);
-			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id & !a.IsDel);
-			var urlTestAttends = context.UrlTestAttends.AsNoTracking().Where(a => a.UrlTestUrl == url)
-				.OrderBy(a => a.NumberOfRun).ToList();
-			var obj = new UrlAttendsViewModel()
-				{ Name = urlTest.Name,User=user, MaxPoint = questions.Count(), UrlTestAttends = urlTestAttends};
-			return View(obj);
-		}
-
-		[Route("UserTest/CheckTest/{testAttemptId}")]
-		public IActionResult CheckTest(int testAttemptId)
-		{
-			var urlTestAttend = context.UrlTestAttends.AsNoTracking().First(a => a.Id == testAttemptId);
-			var point = 0;
-			var results = context.Results.AsNoTracking().Where(a => a.UrlTestAttendId == urlTestAttend.Id).ToList();
-			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == urlTestAttend.UrlTestUrl);
-			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId&!a.IsDel);
-			var questions = context.Questions.AsNoTracking().Where(a => a.TestId == test.Id & !a.IsDel)
-				.OrderBy(a => a.Id).ToList();
-			var answers = new List<Answer>();
-
-			foreach (var result in results)
-			{
-				answers.Add(context.Answers.AsNoTracking().First(a => a.Id == result.AnswerId));
-			}
-
-			foreach (var question in questions)
-			{
-				var answersBase = context.Answers.AsNoTracking().Where(a => a.QuestionId == question.Id).ToList();
-				var answerQuestion = answers.Where(a => a.QuestionId == question.Id).ToList();
-				var trueAnswer = true;
-				var trueAnswerCount = 0;
-				foreach (var answer in answersBase)
-					if (answer.True)
-						trueAnswerCount++;
-
-				if (trueAnswerCount == answerQuestion.Count)
-				{
-					foreach (var answer in answerQuestion)
-						if (!answer.True)
-						{
-							trueAnswer = false;
-							break;
-						}
-				}
-				else
-					trueAnswer = false;
-
-				if (trueAnswer)
-				{
-					point++;
-				}
-			}
-
-
-			urlTestAttend.Point = point;
-			context.Update(urlTestAttend);
-			context.SaveChanges();
-			var urlResult = new UrlResultViewModel()
-			{
-				Url = urlTest.Url,
-				Name = urlTest.Name,
-				Point = urlTestAttend.Point,
-				MaxPoint = questions.Count,
-				NumberOfRun = urlTestAttend.NumberOfRun,
-				TestTime = urlTestAttend.TestTime
-			};
-			return View(urlResult);
 		}
 
 		private QuestionPageViewModel CreateQuestionPage(UrlTest urlTest)

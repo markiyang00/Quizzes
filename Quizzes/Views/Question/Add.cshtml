@@ -1,7 +1,7 @@
 ﻿@model QuestionUpdatedViewModel
 <div class="row">
 	<h3>New Question</h3>
-	<form asp-action="UpdatedQuestions" enctype="multipart/form-data" method="post" class="form-horizontal">
+	<form asp-action="Edit" enctype="multipart/form-data" method="post" class="form-horizontal">
 		<br />
 		<br />
 		<div type="hidden" class="form-group">
@@ -21,7 +21,7 @@
 			<input asp-for="Question.Text" class="from-control" />
 			<span asp-validation-for="Question.Text" class="text-danger"></span>
 		</div><br />
-		<a class="btn btn-warning" asp-controller="Test" asp-action="UpdatedTest" asp-route-id="@Model.Question.TestId">Edit Test</a>
+		<a class="btn btn-warning" asp-controller="Test" asp-action="Edit" asp-route-id="@Model.Question.TestId">Edit Test</a>
 		<input class="btn btn-success" type="submit" value="Add Question" />
 	</form>
 </div>

@@ -1,7 +1,7 @@
 ﻿@model AdminTestViewModel
 <div>
 	<h1>Hello @Model.Admin.Name</h1>
-	<a class="btn btn-warning" asp-controller="Test" asp-action="AddTest">Add Test</a>
+	<a class="btn btn-warning" asp-controller="Test" asp-action="Add">Add Test</a>
 	<table border="1">
 		@{
 			var i = 1;
@@ -9,10 +9,10 @@
 			{
 				<tr>
 					<td>@i @test.Name</td>
-					<td><a class="btn btn-warning" asp-controller="Test" asp-action="UpdatedTest" asp-route-Id="@test.Id">Edit</a></td>
+					<td><a class="btn btn-warning" asp-controller="Test" asp-action="Edit" asp-route-Id="@test.Id">Edit</a></td>
 					<td><a class="btn btn-warning" asp-controller="Admin" asp-action="AllUrlTest" asp-route-Id="@test.Id">All Url</a></td>
 					<td><a class="btn btn-warning" asp-controller="Admin" asp-action="AddUrlTest" asp-route-Id="@test.Id">Add Url</a></td>
-					<td><a class="btn btn-warning" asp-controller="Test" asp-action="DelTest" asp-route-Id="@test.Id">Del Test</a></td>
+					<td><a class="btn btn-warning" asp-controller="Test" asp-action="Del" asp-route-Id="@test.Id">Del Test</a></td>
 				</tr>
 				i++;
 			}

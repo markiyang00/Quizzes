@@ -17,27 +17,27 @@
 									{
 										<div>
 											<strong>@j)@answer.Text</strong>
-											<a class="btn btn-warning" asp-controller="Test" asp-action="UpdatedAnswer" asp-route-id="@answer.Id">Edit Answer</a>
+											<a class="btn btn-warning" asp-controller="Test" asp-action="Edit" asp-route-id="@answer.Id">Edit Answer</a>
 											<a class="btn btn-warning" asp-controller="Test" asp-action="DelAnswer" asp-route-id="@answer.Id">Del Answer</a>
 										</div>
 										j++;
 									}
 								}
-								<a class="btn btn-warning" asp-controller="Test" asp-action="AddAnswer" asp-route-id="@question.Id">Add Answer</a>
+								<a class="btn btn-warning" asp-controller="Test" asp-action="Add" asp-route-id="@question.Id">Add Answer</a>
 								<br />
 							}
 						</div>
-						<a class="btn btn-warning" asp-controller="Test" asp-action="UpdatedQuestions" asp-route-id="@question.Id">Edit Question</a>
-						<a class="btn btn-warning" asp-controller="Test" asp-action="DelQuestions" asp-route-id="@question.Id">Del Question</a><br/>
+						<a class="btn btn-warning" asp-controller="Test" asp-action="Edit" asp-route-id="@question.Id">Edit Question</a>
+						<a class="btn btn-warning" asp-controller="Test" asp-action="Del" asp-route-id="@question.Id">Del Question</a><br/>
 						i++;
 					}
 
-					<a class="btn btn-warning" asp-controller="Test" asp-action="AddQuestions" asp-route-testId="@Model.Test.Id">Add Question</a>
+					<a class="btn btn-warning" asp-controller="Test" asp-action="Add" asp-route-testId="@Model.Test.Id">Add Question</a>
 					<br />
 				}
 			</div>
 		}
-		<a class="btn btn-warning" asp-controller="Test" asp-action="AddTest">Add new Test</a>
+		<a class="btn btn-warning" asp-controller="Test" asp-action="Add">Add new Test</a>
 		<a class="btn btn-warning" asp-controller="Admin" asp-action="Admin">Admin</a>
 		<a class="btn btn-warning" asp-controller="Admin" asp-action="Exit">Exit</a>
 	</div>

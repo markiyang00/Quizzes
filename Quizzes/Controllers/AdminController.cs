@@ -11,7 +11,7 @@ using Quizzes.ViewModels;
 
 namespace Quizzes.Controllers
 {
-	public class AdminController:Controller
+	public class AdminController : Controller
 	{
 		private readonly AppDBContext context;
 
@@ -40,10 +40,11 @@ namespace Quizzes.Controllers
 			admin.Mes = "Password or Name not Equals";
 			return View(admin);
 		}
+
 		public ViewResult Admin(Admin admin)
 		{
-			var tests = context.Tests.Where(a=>!a.IsDel).ToList();
-			var obg=new AdminTestViewModel(){Admin = admin,Tests = tests};
+			var tests = context.Tests.Where(a => !a.IsDel).ToList();
+			var obg = new AdminTestViewModel() {Admin = admin, Tests = tests};
 			return View(obg);
 		}
 
@@ -55,7 +56,7 @@ namespace Quizzes.Controllers
 
 		public IActionResult AddUrlTest(int id)
 		{
-			var urlTest = new UrlTest() { TestId = id };
+			var urlTest = new UrlTest() {TestId = id};
 			return View(urlTest);
 		}
 
@@ -68,10 +69,12 @@ namespace Quizzes.Controllers
 				{
 					urlTest.Url = Guid.NewGuid().ToString();
 				}
+
 				context.UrlTests.Add(urlTest);
 				context.SaveChanges();
-				return RedirectToAction("AddUrlTestUrl",urlTest);
+				return RedirectToAction("AddUrlTestUrl", urlTest);
 			}
+
 			return View(urlTest);
 		}
 
@@ -83,7 +86,7 @@ namespace Quizzes.Controllers
 		public IActionResult AllUrlTest(int id)
 		{
 			var urlTests = context.UrlTests.Where(a => a.TestId == id).ToList();
-			var obj=new AllUrlViewModel(){UrlTests = urlTests};
+			var obj = new AllUrlViewModel() {UrlTests = urlTests};
 			return View(obj);
 		}
 	}

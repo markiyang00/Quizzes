@@ -1,9 +1,15 @@
 ﻿@model Answer
 <div class="row">
-	<h3>Add Answer</h3>
-	<form asp-action="UpdatedAnswer" enctype="multipart/form-data" method="post" class="form-horizontal">
+	<h3>Edit Answer</h3>
+	<form asp-action="Edit" enctype="multipart/form-data" method="post" class="form-horizontal">
 		<br />
 		<br />
+		<div type="hidden" class="form-group">
+			<div type="hidden" class="col-md-5">
+				<input type="hidden" asp-for="Id" class="from-control" />
+				<span type="hidden" asp-validation-for="Id" class="text-danger"></span>
+			</div>
+		</div>
 		<div type="hidden" class="form-group">
 			<div type="hidden" class="col-md-5">
 				<input type="hidden" asp-for="QuestionId" class="from-control" />
@@ -19,7 +25,8 @@
 			<label asp-for="True"></label>
 			<input asp-for="True" class="from-control" />
 			<span asp-validation-for="True" class="text-danger"></span>
-		</div><br/>
-		<input class="btn btn-success" type="submit" value="Add Answer" />
+		</div><br />
+			  <a class="btn btn-warning" asp-controller="Test" asp-action="Edit" asp-route-id="@Model.QuestionId">Back to Questions</a>
+		<input class="btn btn-success" type="submit" value="Save Changes" />
 	</form>
 </div>
