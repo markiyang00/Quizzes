@@ -31,13 +31,18 @@ namespace Quizzes.Controllers
 		[HttpPost]
 		public IActionResult Exit(AdminViewModel admin)
 		{
-			var adminBase = context.Admins.FirstOrDefault(a => a.Name == admin.Name && a.Password == admin.Password);
-			if (adminBase != null)
+			if (ModelState.IsValid)
 			{
-				return RedirectToAction("Admin");
+				var adminBase =
+					context.Admins.FirstOrDefault(a => a.Name == admin.Name && a.Password == admin.Password);
+				if (adminBase != null)
+				{
+					return RedirectToAction("Admin");
+				}
+
+				admin.Mes = "Password or Name not Equals";
 			}
 
-			admin.Mes = "Password or Name not Equals";
 			return View(admin);
 		}
 

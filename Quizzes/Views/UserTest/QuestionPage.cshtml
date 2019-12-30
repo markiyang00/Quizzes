@@ -54,19 +54,19 @@
 				 }
 				@if (Model.PrevId == null)
 				{
-					<input class="btn btn-success" type="submit" value="Prev Page" disabled="disabled" />
+					<input class="btn btn-success" type="submit" value="Prev Question" disabled="disabled" />
 				}
 				else
 				{
-					<input class="btn btn-success" type="submit" value="Prev Page" asp-route-id="@Model.PrevId" />
+					<input class="btn btn-success" type="submit" value="Prev Question" asp-route-id="@Model.PrevId" />
 				}
 				@if (Model.NextId == null)
 				{
-					<input class="btn btn-success" type="submit" value="Next Page" disabled="disabled" />
+					<input class="btn btn-success" type="submit" value="Next Question" disabled="disabled" />
 				}
 				else
 				{
-					<input class="btn btn-success" type="submit" value="Next Page" asp-route-id="@Model.NextId" />
+					<input class="btn btn-success" type="submit" value="Next Question" asp-route-id="@Model.NextId" />
 				}
 				<input class="btn btn-success" type="submit" value="End test" asp-route-id="-2" />
 			}

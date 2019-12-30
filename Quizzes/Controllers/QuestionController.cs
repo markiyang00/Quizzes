@@ -43,15 +43,22 @@ namespace Quizzes.Controllers
 		[HttpPost]
 		public IActionResult Edit(QuestionUpdatedViewModel questionModel)
 		{
-			if (questionModel.Question.Id == 0)
+			if (ModelState.IsValid)
 			{
-				context.Questions.Add(questionModel.Question);
+				if (questionModel.Question.Id == 0)
+				{
+					context.Questions.Add(questionModel.Question);
+					context.SaveChanges();
+					return RedirectToAction("Edit", "Test", new {id = questionModel.Question.TestId});
+				}
+
+				context.Update(questionModel.Question);
 				context.SaveChanges();
-				return RedirectToAction("Edit","Test", new { id = questionModel.Question.TestId });
 			}
-			context.Update(questionModel.Question);
-			context.SaveChanges();
-			questionModel.Answers = context.Answers.AsNoTracking().Where(a => a.QuestionId == questionModel.Question.Id).ToList();
+
+			questionModel.Answers = context.Answers.AsNoTracking()
+				.Where(a => a.QuestionId == questionModel.Question.Id).ToList();
+
 			return View(questionModel);
 		}
 

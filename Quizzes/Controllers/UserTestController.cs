@@ -75,6 +75,12 @@ namespace Quizzes.Controllers
 				}
 			}
 
+			if (ModelState.IsValid)
+			{
+				userQuestionPage.TestName = context.Tests.First(a => a.Id == urlTestBase.TestId & !a.IsDel).Name;
+				return View(userQuestionPage);
+			}
+
 			if (string.IsNullOrEmpty(urlTestBase.Name))
 			{
 				userQuestionPage.TestName = context.Tests.First(a => a.Id == urlTestBase.TestId&!a.IsDel).Name;
@@ -130,7 +136,7 @@ namespace Quizzes.Controllers
 			}
 
 			var questions = NewQuestion(id, questionPage, test, urlTest, urlAttendBase, resultsBase);
-			FilledNextPrev(id, questionPage, questions);
+			FillNextPrev(id, questionPage, questions);
 			questionPage.QuestionId = questionPage.Question.Id;
 			return View(questionPage);
 		}
@@ -172,7 +178,7 @@ namespace Quizzes.Controllers
 			}
 
 			var questions = NewQuestion(id, userQuestionPage, test, urlTest, urlAttendBase, resultsBase);
-			FilledNextPrev(id, userQuestionPage, questions);
+			FillNextPrev(id, userQuestionPage, questions);
 			userQuestionPage.QuestionId = userQuestionPage.Question.Id;
 			return RedirectToAction("QuestionPage","UserTest");
 		}
@@ -274,7 +280,7 @@ namespace Quizzes.Controllers
 			context.SaveChanges();
 		}
 
-		private static void FilledNextPrev(int id, QuestionPageViewModel userQuestionPage, List<Question> questions)
+		private static void FillNextPrev(int id, QuestionPageViewModel userQuestionPage, List<Question> questions)
 		{
 			var i = questions.FindIndex(q => q.Id == id);
 

@@ -41,12 +41,17 @@ namespace Quizzes.Controllers
 		[HttpPost]
 		public IActionResult Edit(TestUpdatedViewModel testModel)
 		{
-			context.Update(testModel.Test);
-			context.SaveChanges();
+			if (ModelState.IsValid)
+			{
+				context.Update(testModel.Test);
+				context.SaveChanges();
+			}
+
 			testModel.Test = context.Tests.AsNoTracking().FirstOrDefault(a => a.Id == testModel.Test.Id & !a.IsDel);
-			testModel.Questions = context.Questions.AsNoTracking().Where(a => a.TestId == testModel.Test.Id & !a.IsDel)
-				.ToList();
-			return View(testModel);
+				testModel.Questions = context.Questions.AsNoTracking()
+					.Where(a => a.TestId == testModel.Test.Id & !a.IsDel)
+					.ToList();
+				return View(testModel);
 		}
 
 		public IActionResult Del(int id)

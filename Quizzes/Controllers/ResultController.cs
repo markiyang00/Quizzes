@@ -33,7 +33,7 @@ namespace Quizzes.Controllers
 		public IActionResult CheckTest(int testAttemptId)
 		{
 			var urlTestAttend = context.UrlTestAttends.AsNoTracking().First(a => a.Id == testAttemptId);
-			var point = 0;
+			var score = 0;
 			var results = context.Results.AsNoTracking().Where(a => a.UrlTestAttendId == urlTestAttend.Id).ToList();
 			var urlTest = context.UrlTests.AsNoTracking().First(a => a.Url == urlTestAttend.UrlTestUrl);
 			var test = context.Tests.AsNoTracking().First(a => a.Id == urlTest.TestId & !a.IsDel);
@@ -70,12 +70,12 @@ namespace Quizzes.Controllers
 
 				if (trueAnswer)
 				{
-					point++;
+					score++;
 				}
 			}
 
 
-			urlTestAttend.Point = point;
+			urlTestAttend.Point = score;
 			context.Update(urlTestAttend);
 			context.SaveChanges();
 			var urlResult = new UrlResultViewModel()
