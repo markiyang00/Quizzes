@@ -1,7 +1,7 @@
 ﻿@model TestUpdatedViewModel
 <div class="row">
 	<h3>Edit Test</h3>
-	<form asp-action="Edit" enctype="multipart/form-data" method="post" class="form-horizontal">
+	<form asp-controller="Test" asp-action="Edit" enctype="multipart/form-data" method="post" class="form-horizontal">
 		<br />
 		<br />
 		<div type="hidden" class="form-group">
@@ -52,6 +52,6 @@
 			
 		}
 		<a class="btn btn-warning" asp-controller="Admin" asp-action="Admin">Admin</a>
-		<input class="btn btn-success" type="submit" value="Save Changes" />
+		<input class="btn btn-success" type="submit" asp-route-id="@Model.Test.Id" value="Save Changes" />
 	</form>
 </div>

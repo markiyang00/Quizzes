@@ -48,7 +48,7 @@ namespace Quizzes.Controllers
 
 			foreach (var question in questions)
 			{
-				var answersBase = context.Answers.AsNoTracking().Where(a => a.QuestionId == question.Id).ToList();
+				var answersBase = context.Answers.AsNoTracking().Where(a => a.QuestionId == question.Id & !a.IsDel).ToList();
 				var answerQuestion = answers.Where(a => a.QuestionId == question.Id).ToList();
 				var trueAnswer = true;
 				var trueAnswerCount = 0;

@@ -33,15 +33,17 @@ namespace Quizzes.Controllers
 			var obg = new QuestionUpdatedViewModel
 			{
 				Question = question,
-				Answers = context.Answers.AsNoTracking().Where(a => a.QuestionId == id).ToList(),
+				Answers = context.Answers.AsNoTracking().Where(a => a.QuestionId == id & !a.IsDel).ToList(),
 				ImgDel = "/img/Delete.jpg",
 				ImgEdit = "/img/Edit.jpg"
 			};
 			return View(obg);
 		}
 
+		[Route("Question/Edit")]
+		[Route("Question/Edit/{id}")]
 		[HttpPost]
-		public IActionResult Edit(QuestionUpdatedViewModel questionModel)
+		public IActionResult Edit(int id,QuestionUpdatedViewModel questionModel)
 		{
 			if (ModelState.IsValid)
 			{
@@ -57,8 +59,9 @@ namespace Quizzes.Controllers
 			}
 
 			questionModel.Answers = context.Answers.AsNoTracking()
-				.Where(a => a.QuestionId == questionModel.Question.Id).ToList();
-
+				.Where(a => a.QuestionId == questionModel.Question.Id & !a.IsDel).ToList();
+			questionModel.ImgDel = "/img/Delete.jpg";
+			questionModel.ImgEdit = "/img/Edit.jpg";
 			return View(questionModel);
 		}
 

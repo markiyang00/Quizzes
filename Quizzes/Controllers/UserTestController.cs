@@ -75,7 +75,7 @@ namespace Quizzes.Controllers
 				}
 			}
 
-			if (ModelState.IsValid)
+			if (!ModelState.IsValid)
 			{
 				userQuestionPage.TestName = context.Tests.First(a => a.Id == urlTestBase.TestId & !a.IsDel).Name;
 				return View(userQuestionPage);
@@ -202,7 +202,7 @@ namespace Quizzes.Controllers
 			foreach (var result in resultsBase)
 			{
 				var answer = context.Answers.FirstOrDefault(a =>
-					a.Id == result.AnswerId & a.QuestionId == id);
+					a.Id == result.AnswerId & a.QuestionId == id & !a.IsDel);
 				if (answer != null)
 					answersUser.Add(answer);
 			}
@@ -221,7 +221,7 @@ namespace Quizzes.Controllers
 				.ToList();
 
 
-			userQuestionPage.Answers = context.Answers.AsNoTracking().Where(a => a.QuestionId == id).ToList();
+			userQuestionPage.Answers = context.Answers.AsNoTracking().Where(a => a.QuestionId == id & !a.IsDel).ToList();
 			var answersPage = new List<Answer>();
 			foreach (var result in resultsBase)
 			{

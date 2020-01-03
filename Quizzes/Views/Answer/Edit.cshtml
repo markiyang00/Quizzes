@@ -1,7 +1,7 @@
 ﻿@model Answer
 <div class="row">
 	<h3>Edit Answer</h3>
-	<form asp-action="Edit" enctype="multipart/form-data" method="post" class="form-horizontal">
+	<form asp-controller="Answer" asp-action="Edit" enctype="multipart/form-data" method="post" class="form-horizontal">
 		<br />
 		<br />
 		<div type="hidden" class="form-group">
@@ -26,7 +26,7 @@
 			<input asp-for="True" class="from-control" />
 			<span asp-validation-for="True" class="text-danger"></span>
 		</div><br />
-			  <a class="btn btn-warning" asp-controller="Question" asp-action="Edit" asp-route-id="@Model.QuestionId">Back to Questions</a>
-		<input class="btn btn-success" type="submit" value="Save Changes" />
+		<a class="btn btn-warning" asp-controller="Question" asp-action="Edit" asp-route-id="@Model.QuestionId">Back to Questions</a>
+		<input class="btn btn-success" type="submit" asp-route-id="@Model.Id" value="Save Changes" />
 	</form>
 </div>

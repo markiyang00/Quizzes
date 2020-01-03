@@ -1,7 +1,7 @@
 ﻿@model QuestionUpdatedViewModel
 <div class="row">
 	<h3>Edit Question</h3>
-	<form asp-action="Edit" enctype="multipart/form-data" method="post" class="form-horizontal">
+	<form asp-controller="Question" asp-action="Edit" enctype="multipart/form-data" method="post" class="form-horizontal">
 		<br />
 		<br />
 		<div type="hidden" class="form-group">
@@ -46,6 +46,6 @@
 		</table>
 		<a class="btn btn-warning" asp-controller="Answer" asp-action="Add" asp-route-id="@Model.Question.Id">Add Answer</a><br/>
 																																<a class="btn btn-warning" asp-controller="Test" asp-action="Edit" asp-route-id="@Model.Question.TestId">Back to Test</a>
-		<input class="btn btn-success" type="submit" value="Save Changes" />
+		<input class="btn btn-success" type="submit" asp-route-id="@Model.Question.Id" value="Save Changes" />
 	</form>
 </div>

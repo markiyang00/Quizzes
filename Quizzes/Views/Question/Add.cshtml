@@ -1,7 +1,7 @@
 ﻿@model QuestionUpdatedViewModel
 <div class="row">
 	<h3>New Question</h3>
-	<form asp-action="Edit" enctype="multipart/form-data" method="post" class="form-horizontal">
+	<form asp-controller="Question" asp-action="Edit" enctype="multipart/form-data" method="post" class="form-horizontal">
 		<br />
 		<br />
 		<div type="hidden" class="form-group">

@@ -38,20 +38,29 @@ namespace Quizzes.Controllers
 			return View(obg);
 		}
 
+		[Route("Test/Edit")]
+		[Route("Test/Edit/{id}")]
 		[HttpPost]
-		public IActionResult Edit(TestUpdatedViewModel testModel)
+		public IActionResult Edit(int id, TestUpdatedViewModel testModel)
 		{
-			if (ModelState.IsValid)
+
+			if (testModel.Test.Id == 0)
 			{
-				context.Update(testModel.Test);
+				context.Tests.Add(testModel.Test);
 				context.SaveChanges();
+				return RedirectToAction("Admin", "Admin");
 			}
 
+			context.Update(testModel.Test);
+			context.SaveChanges();
+
+
 			testModel.Test = context.Tests.AsNoTracking().FirstOrDefault(a => a.Id == testModel.Test.Id & !a.IsDel);
-				testModel.Questions = context.Questions.AsNoTracking()
-					.Where(a => a.TestId == testModel.Test.Id & !a.IsDel)
-					.ToList();
-				return View(testModel);
+			testModel.Questions = context.Questions.AsNoTracking()
+				.Where(a => a.TestId == testModel.Test.Id & !a.IsDel).ToList();
+			testModel.ImgDel = "/img/Delete.jpg";
+			testModel.ImgEdit = "/img/Edit.jpg";
+			return View(testModel);
 		}
 
 		public IActionResult Del(int id)
